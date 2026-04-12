@@ -988,8 +988,8 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// ── Demo form submission ──────────────────────────────────
-function submitDemo() {
+// ── Demo form submission via Formspree ───────────────────
+async function submitDemo() {
   const name  = document.getElementById('f-name').value.trim();
   const store = document.getElementById('f-store').value.trim();
   const email = document.getElementById('f-email').value.trim();
@@ -999,37 +999,45 @@ function submitDemo() {
     return;
   }
 
-  // Build mailto link
   const phone   = document.getElementById('f-phone').value.trim();
   const city    = document.getElementById('f-city').value.trim();
   const plan    = document.getElementById('f-plan').value;
   const message = document.getElementById('f-message').value.trim();
-
   const planLabels = { starter:'Starter ($49/mo)', pro:'Pro ($79/mo)', multi:'Multi-Store ($129/mo)' };
 
-  const body = [
-    'New RetroVault POS Demo Request',
-    '================================',
-    '',
-    'Name: ' + name,
-    'Store: ' + store,
-    'Email: ' + email,
-    phone   ? 'Phone: ' + phone   : '',
-    city    ? 'City: '  + city    : '',
-    plan    ? 'Plan: '  + (planLabels[plan] || plan) : '',
-    '',
-    message ? 'About their store:\n' + message : '',
-  ].filter(Boolean).join('\n');
+  // Disable button while submitting
+  const btn = document.querySelector('.form-submit');
+  btn.disabled = true;
+  btn.innerHTML = '<span>⏳</span> Sending...';
 
-  const mailto = 'mailto:info@retrovaultpos.com'
-    + '?subject=' + encodeURIComponent('Demo Request — ' + store)
-    + '&body='    + encodeURIComponent(body);
+  try {
+    const res = await fetch('https://formspree.io/f/mpqkakjg', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        name,
+        store_name:  store,
+        email,
+        phone:       phone   || 'Not provided',
+        city:        city    || 'Not provided',
+        plan:        planLabels[plan] || 'Not sure yet',
+        message:     message || 'No message provided',
+        _subject:    'Demo Request — ' + store + ' (' + city + ')',
+      }),
+    });
 
-  window.location.href = mailto;
-
-  // Show success state
-  document.getElementById('form-fields').style.display = 'none';
-  document.getElementById('form-success').style.display = 'block';
+    if (res.ok) {
+      // Show success
+      document.getElementById('form-fields').style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    } else {
+      throw new Error('Submission failed');
+    }
+  } catch(e) {
+    btn.disabled = false;
+    btn.innerHTML = '<span>🎮</span> Send my request';
+    alert('Something went wrong — please email us directly at info@retrovaultpos.com');
+  }
 }
 
 // ── Smooth nav ────────────────────────────────────────────
