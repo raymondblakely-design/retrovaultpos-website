@@ -320,7 +320,7 @@ section { padding: 100px 5%; }
 
 .feat-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
 
-/* Screenshot placeholder */
+/* Screenshot placeholder — removed
 .screenshot-placeholder {
   background: var(--dark3);
   border: 1px solid rgba(200,241,53,.15);
@@ -332,7 +332,7 @@ section { padding: 100px 5%; }
   color: rgba(255,255,255,.3);
   font-size: 13px;
 }
-.screenshot-placeholder .ph-icon { font-size: 28px; opacity: .4; }
+.screenshot-placeholder .ph-icon { font-size: 28px; opacity: .4; } */
 
 /* ── How it works ───────────────────────────────────────────── */
 .how { background: var(--slate); }
@@ -613,9 +613,9 @@ footer {
     <a href="#features">Features</a>
     <a href="#how">How it works</a>
     <a href="#pricing">Pricing</a>
-    <a href="#demo">Contact</a>
+    <a href="#demo">Waitlist</a>
   </div>
-  <a href="#demo" class="nav-cta">Request demo →</a>
+  <a href="#demo" class="nav-cta">Join the waitlist →</a>
 </nav>
 
 <!-- ── Hero ───────────────────────────────────────────────── -->
@@ -626,7 +626,7 @@ footer {
     purpose-built for buy/sell/trade game shops. Not a generic retail tool bolted together.
   </p>
   <div class="hero-ctas">
-    <a href="#demo" class="btn-primary">🎮 Request a demo</a>
+    <a href="#demo" class="btn-primary">🎮 Join the waitlist</a>
     <a href="#features" class="btn-ghost">See features</a>
   </div>
   <div class="hero-stats">
@@ -718,20 +718,14 @@ footer {
         <div class="feat-icon">💰</div>
         <div class="feat-title" style="color:#fff">Point of Sale</div>
         <div class="feat-desc">Scan QR codes to instantly add items to cart. Accept cash, card, store credit, or split payments. Print thermal receipts with a scannable QR code for easy returns. Training mode for new staff.</div>
-        <div class="screenshot-placeholder">
-          <span class="ph-icon">🖥</span>
-          <span>POS screenshot coming soon</span>
-        </div>
+
       </div>
 
       <div class="feat-card reveal">
         <div class="feat-icon">📊</div>
         <div class="feat-title">Live Market Pricing</div>
         <div class="feat-desc">Pull real eBay completed sale prices for any game — loose, CIB, or sealed. Automatically calculates your cash and store credit trade-in offers.</div>
-        <div class="screenshot-placeholder" style="background:rgba(200,241,53,.04);border-color:rgba(200,241,53,.15)">
-          <span class="ph-icon">📈</span>
-          <span>Pricing screenshot coming soon</span>
-        </div>
+
       </div>
 
       <div class="feat-card reveal">
@@ -786,8 +780,8 @@ footer {
       <div class="step reveal">
         <div class="step-num">1</div>
         <div class="step-content">
-          <h3>Request a demo</h3>
-          <p>Fill out the form below and we'll reach out personally — usually within 24 hours. We walk you through the system and answer any questions specific to your store.</p>
+          <h3>Join the waitlist</h3>
+          <p>Drop your info below and we'll reach out personally as we get closer to launch. Be among the first stores to get access.</p>
         </div>
       </div>
       <div class="step reveal">
@@ -838,7 +832,7 @@ footer {
           <div class="plan-feature"><span class="check">✓</span> Up to 2 staff accounts</div>
           <div class="plan-feature"><span class="check">✓</span> Email support</div>
         </div>
-        <a href="#demo" class="plan-btn">Get started</a>
+        <a href="#demo" class="plan-btn">Join the waitlist</a>
       </div>
 
       <div class="plan popular reveal">
@@ -855,7 +849,7 @@ footer {
           <div class="plan-feature"><span class="check">✓</span> P&L reporting</div>
           <div class="plan-feature"><span class="check">✓</span> Priority support</div>
         </div>
-        <a href="#demo" class="plan-btn">Get started</a>
+        <a href="#demo" class="plan-btn">Join the waitlist</a>
       </div>
 
       <div class="plan reveal">
@@ -871,7 +865,7 @@ footer {
           <div class="plan-feature"><span class="check">✓</span> Dedicated onboarding</div>
           <div class="plan-feature"><span class="check">✓</span> Phone support</div>
         </div>
-        <a href="#demo" class="plan-btn">Get started</a>
+        <a href="#demo" class="plan-btn">Join the waitlist</a>
       </div>
 
     </div>
@@ -892,13 +886,13 @@ footer {
   </div>
 </section>
 
-<!-- ── Demo Form ───────────────────────────────────────────── -->
+<!-- ── Waitlist Form ──────────────────────────────────────── -->
 <section class="demo" id="demo">
   <div class="demo-inner">
     <div class="reveal">
-      <div class="section-label" style="justify-content:center;display:flex">Let's talk</div>
-      <h2 class="section-title">Request a demo</h2>
-      <p class="section-sub">Tell us about your store and we'll reach out within 24 hours to walk you through RetroVault personally.</p>
+      <div class="section-label" style="justify-content:center;display:flex">Early access</div>
+      <h2 class="section-title">Join the waitlist</h2>
+      <p class="section-sub">RetroVault is currently in development. Leave your info and we'll reach out personally when we're ready to bring your store on board.</p>
     </div>
     <div class="demo-form reveal">
       <div id="form-fields">
@@ -918,39 +912,35 @@ footer {
             <input type="email" id="f-email" placeholder="you@yourstore.com" required>
           </div>
           <div class="form-group">
-            <label>Phone number</label>
-            <input type="tel" id="f-phone" placeholder="(555) 000-0000">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
             <label>City / State</label>
             <input type="text" id="f-city" placeholder="Buffalo, NY">
           </div>
-          <div class="form-group">
-            <label>Plan interest</label>
-            <select id="f-plan">
-              <option value="">Not sure yet</option>
-              <option value="starter">Starter — $49/mo</option>
-              <option value="pro">Pro — $79/mo</option>
-              <option value="multi">Multi-Store — $129/mo</option>
-            </select>
-          </div>
         </div>
         <div class="form-group">
-          <label>Tell us about your store</label>
-          <textarea id="f-message" placeholder="What types of games/collectibles do you sell? How many transactions per day? What's your biggest challenge right now?"></textarea>
+          <label>What do you sell?</label>
+          <select id="f-plan">
+            <option value="">Select your primary inventory</option>
+            <option value="retro-games">Retro video games</option>
+            <option value="modern-games">Modern video games</option>
+            <option value="games-comics">Games + comics</option>
+            <option value="games-cards">Games + trading cards</option>
+            <option value="mixed">Mixed collectibles</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Anything you want us to know? <span style="opacity:.5;font-weight:400">(optional)</span></label>
+          <textarea id="f-message" placeholder="Your biggest challenge with your current system, how many transactions you do daily, what features matter most to you..."></textarea>
         </div>
         <button class="form-submit" onclick="submitDemo()">
-          <span>🎮</span> Send my request
+          <span>🎮</span> Join the waitlist
         </button>
-        <p class="form-note">We respond personally within 24 hours. No spam, ever.</p>
+        <p class="form-note">No spam. No pressure. We'll reach out personally when the time is right.</p>
       </div>
       <div id="form-success">
         <div class="success-icon">🎮</div>
-        <h3>Request received!</h3>
-        <p>Thanks for reaching out. We'll be in touch within 24 hours at the email you provided.<br><br>
-        In the meantime, feel free to email us directly at <strong>info@retrovaultpos.com</strong></p>
+        <h3>You're on the list!</h3>
+        <p>Thanks for your interest in RetroVault. We'll be in touch personally as we get closer to launch.<br><br>
+        Questions in the meantime? Email us at <strong>info@retrovaultpos.com</strong></p>
       </div>
     </div>
   </div>
@@ -963,7 +953,7 @@ footer {
     <div class="footer-links">
       <a href="#features">Features</a>
       <a href="#pricing">Pricing</a>
-      <a href="#demo">Contact</a>
+      <a href="#demo">Waitlist</a>
       <a href="mailto:info@retrovaultpos.com">info@retrovaultpos.com</a>
     </div>
     <div class="footer-copy">© 2026 RetroVault POS. All rights reserved.</div>
