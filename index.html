@@ -607,6 +607,7 @@ footer {
   .hero-stats { gap: 24px; }
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -1006,32 +1007,26 @@ async function submitDemo() {
   btn.innerHTML = 'Sending…';
 
   try {
-    const res = await fetch('https://formspree.io/f/mpqkakjg', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        name,
-        store_name:  store,
-        email,
-        phone:       phone   || 'Not provided',
-        city:        city    || 'Not provided',
-        plan:        planLabels[plan] || 'Not sure yet',
-        message:     message || 'No message provided',
-        _subject:    'Demo Request — ' + store + ' (' + city + ')',
-      }),
+    const sb = supabase.createClient(
+      'https://obfztbtktpiqiieziheq.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZnp0YnRrdHBpcWlpZXppaGVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MDYyMzksImV4cCI6MjA5MTA4MjIzOX0.ppGseoUMYk-bpoZX-9yVJX-umeFEvRwYUdh3dKkXCpo'
+    );
+    const { error } = await sb.from('waitlist').insert({
+      name,
+      store_name: store,
+      email,
+      city:    city    || null,
+      sells:   planLabels[plan] || null,
+      message: message || null,
     });
-
-    if (res.ok) {
-      // Show success
-      document.getElementById('form-fields').style.display = 'none';
-      document.getElementById('form-success').style.display = 'block';
-    } else {
-      throw new Error('Submission failed');
-    }
+    if (error) throw error;
+    document.getElementById('form-fields').style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
   } catch(e) {
+    console.error('Waitlist error:', e);
     btn.disabled = false;
-    btn.innerHTML = 'Send my request';
-    alert('Something went wrong — please email us directly at info@retrovaultpos.com');
+    btn.textContent = 'Join the waitlist';
+    alert('Something went wrong — please email us at info@retrovaultpos.com');
   }
 }
 
