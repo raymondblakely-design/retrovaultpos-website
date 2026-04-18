@@ -233,7 +233,7 @@ section { padding: 100px 5%; }
   transition: transform .2s, box-shadow .2s;
 }
 .pain-item:hover { transform: translateX(4px); box-shadow: 0 4px 20px rgba(0,0,0,.06); }
-.pain-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.pain-icon { font-family: "DM Mono", monospace; font-size: 11px; font-weight: 700; color: var(--lime); flex-shrink: 0; margin-top: 4px; letter-spacing: .5px; }
 .pain-text strong { display: block; font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 2px; }
 .pain-text span { font-size: 13px; color: var(--muted); }
 
@@ -302,13 +302,20 @@ section { padding: 100px 5%; }
 .feat-card.featured .feat-desc { color: rgba(255,255,255,.6); }
 
 .feat-icon {
-  width: 48px; height: 48px;
-  background: rgba(200,241,53,.1);
-  border: 1px solid rgba(200,241,53,.2);
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px;
-  margin-bottom: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--lime);
+  font-family: "DM Mono", monospace;
+  margin-bottom: 16px;
+  flex-shrink: 0;
 }
 .feat-card.featured .feat-icon { background: rgba(200,241,53,.15); }
 
@@ -552,7 +559,7 @@ section { padding: 100px 5%; }
   display: none;
   text-align: center; padding: 32px;
 }
-#form-success .success-icon { font-size: 48px; margin-bottom: 16px; }
+#form-success .success-icon { font-size: 48px; margin-bottom: 16px; color: var(--lime); font-weight: 700; }
 #form-success h3 { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
 #form-success p { color: var(--muted); font-size: 14px; }
 
@@ -626,7 +633,7 @@ footer {
     purpose-built for buy/sell/trade game shops. Not a generic retail tool bolted together.
   </p>
   <div class="hero-ctas">
-    <a href="#demo" class="btn-primary">🎮 Join the waitlist</a>
+    <a href="#demo" class="btn-primary">Join the waitlist</a>
     <a href="#features" class="btn-ghost">See features</a>
   </div>
   <div class="hero-stats">
@@ -658,28 +665,28 @@ footer {
       <p class="section-sub">Generic POS systems weren't built for retro games. You end up piecing together spreadsheets, sticky notes, and gut instinct.</p>
       <ul class="pain-list">
         <li class="pain-item">
-          <span class="pain-icon">📋</span>
+          <span class="pain-icon">01</span>
           <div class="pain-text">
             <strong>No trade-in system</strong>
             <span>Calculating offers by hand, guessing on prices, losing money on bad trades</span>
           </div>
         </li>
         <li class="pain-item">
-          <span class="pain-icon">💸</span>
+          <span class="pain-icon">02</span>
           <div class="pain-text">
             <strong>Paying too much for POS</strong>
             <span>Generic systems charge $150–300/mo and still don't understand game condition grades</span>
           </div>
         </li>
         <li class="pain-item">
-          <span class="pain-icon">📊</span>
+          <span class="pain-icon">03</span>
           <div class="pain-text">
             <strong>No market pricing</strong>
             <span>Manually checking PriceCharting for every item while a customer waits at the counter</span>
           </div>
         </li>
         <li class="pain-item">
-          <span class="pain-icon">🏷</span>
+          <span class="pain-icon">04</span>
           <div class="pain-text">
             <strong>Label chaos</strong>
             <span>No SKU system, inconsistent pricing, can't track what you paid vs what you're selling for</span>
@@ -715,27 +722,27 @@ footer {
     <div class="features-grid">
 
       <div class="feat-card featured reveal">
-        <div class="feat-icon">💰</div>
+        <div class="feat-icon">$</div>
         <div class="feat-title" style="color:#fff">Point of Sale</div>
         <div class="feat-desc">Scan QR codes to instantly add items to cart. Accept cash, card, store credit, or split payments. Print thermal receipts with a scannable QR code for easy returns. Training mode for new staff.</div>
 
       </div>
 
       <div class="feat-card reveal">
-        <div class="feat-icon">📊</div>
+        <div class="feat-icon">≡</div>
         <div class="feat-title">Live Market Pricing</div>
         <div class="feat-desc">Pull real eBay completed sale prices for any game — loose, CIB, or sealed. Automatically calculates your cash and store credit trade-in offers.</div>
 
       </div>
 
       <div class="feat-card reveal">
-        <div class="feat-icon">🔄</div>
+        <div class="feat-icon">⇄</div>
         <div class="feat-title">Trade-In System</div>
         <div class="feat-desc">Look up market prices, build a trade-in quote, print an invoice, and add everything to inventory in one flow. Cash or store credit payout options.</div>
       </div>
 
       <div class="feat-card reveal">
-        <div class="feat-icon">🏷</div>
+        <div class="feat-icon">#</div>
         <div class="feat-title">SKU & Label Printing</div>
         <div class="feat-desc">Scan a UPC to auto-fill game details from IGDB. Generate SKU codes and print QR labels. Scan the label at the register to sell instantly.</div>
       </div>
@@ -747,19 +754,19 @@ footer {
       </div>
 
       <div class="feat-card reveal">
-        <div class="feat-icon">📦</div>
+        <div class="feat-icon">◻</div>
         <div class="feat-title">Inventory Management</div>
         <div class="feat-desc">Full inventory with SKU tracking, cost vs. price, margin %, condition, channel, and notes. Sort, filter, search, and export to CSV.</div>
       </div>
 
       <div class="feat-card reveal">
-        <div class="feat-icon">💳</div>
+        <div class="feat-icon">▣</div>
         <div class="feat-title">Loyalty & Store Credit</div>
         <div class="feat-desc">Customer profiles with points, store credit, visit history, and birthday tracking. Apply coupons and discounts at checkout.</div>
       </div>
 
       <div class="feat-card reveal">
-        <div class="feat-icon">📈</div>
+        <div class="feat-icon">↗</div>
         <div class="feat-title">P&L & Reporting</div>
         <div class="feat-desc">Real-time profit & loss, expense tracking, shift reports, and transaction history. Know your numbers without a spreadsheet.</div>
       </div>
@@ -932,12 +939,12 @@ footer {
           <textarea id="f-message" placeholder="Your biggest challenge with your current system, how many transactions you do daily, what features matter most to you..."></textarea>
         </div>
         <button class="form-submit" onclick="submitDemo()">
-          <span>🎮</span> Join the waitlist
+          Join the waitlist
         </button>
         <p class="form-note">No spam. No pressure. We'll reach out personally when the time is right.</p>
       </div>
       <div id="form-success">
-        <div class="success-icon">🎮</div>
+        <div class="success-icon">✓</div>
         <h3>You're on the list!</h3>
         <p>Thanks for your interest in RetroVault. We'll be in touch personally as we get closer to launch.<br><br>
         Questions in the meantime? Email us at <strong>info@retrovaultpos.com</strong></p>
@@ -988,16 +995,15 @@ async function submitDemo() {
     return;
   }
 
-  const phone   = document.getElementById('f-phone').value.trim();
-  const city    = document.getElementById('f-city').value.trim();
-  const plan    = document.getElementById('f-plan').value;
+  const city    = (document.getElementById('f-city')?.value || '').trim();
+  const plan    = (document.getElementById('f-plan')?.value || '');
   const message = document.getElementById('f-message').value.trim();
-  const planLabels = { starter:'Starter ($49/mo)', pro:'Pro ($79/mo)', multi:'Multi-Store ($129/mo)' };
+  const planLabels = { 'retro-games':'Retro video games', 'modern-games':'Modern video games', 'games-comics':'Games + comics', 'games-cards':'Games + trading cards', 'mixed':'Mixed collectibles' };
 
   // Disable button while submitting
   const btn = document.querySelector('.form-submit');
   btn.disabled = true;
-  btn.innerHTML = '<span>⏳</span> Sending...';
+  btn.innerHTML = 'Sending…';
 
   try {
     const res = await fetch('https://formspree.io/f/mpqkakjg', {
@@ -1024,7 +1030,7 @@ async function submitDemo() {
     }
   } catch(e) {
     btn.disabled = false;
-    btn.innerHTML = '<span>🎮</span> Send my request';
+    btn.innerHTML = 'Send my request';
     alert('Something went wrong — please email us directly at info@retrovaultpos.com');
   }
 }
