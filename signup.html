@@ -287,12 +287,17 @@ body {
       <input type="tel" id="phone" placeholder="555-000-0000" autocomplete="tel">
     </div>
 
+    <label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--muted);cursor:pointer;margin-bottom:4px">
+      <input type="checkbox" id="terms-agree" style="margin-top:2px;accent-color:var(--accent);width:14px;height:14px;flex-shrink:0">
+      <span>I agree to the <a href="terms.html" target="_blank" style="color:var(--accent)">Terms of Service</a> and <a href="privacy.html" target="_blank" style="color:var(--accent)">Privacy Policy</a></span>
+    </label>
+
     <button class="submit-btn" id="submit-btn" onclick="startCheckout()">
       Start free trial — 14 days free →
     </button>
 
     <p class="fine-print">
-      By signing up you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.<br>
+      By signing up you agree to our <a href="terms.html" target="_blank">Terms of Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a>.<br>
       Requires internet connection. <a href="landing.html">Learn more about RetroVault →</a>
     </p>
 
@@ -341,6 +346,7 @@ async function startCheckout() {
   }
 
   if (!storeName) return showErr('Store name is required');
+  if (!document.getElementById('terms-agree').checked) return showErr('Please agree to the Terms of Service and Privacy Policy to continue');
   if (!ownerName) return showErr('Your name is required');
   if (!email || !email.includes('@')) return showErr('Valid email address is required');
 
