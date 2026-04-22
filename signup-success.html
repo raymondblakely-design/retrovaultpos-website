@@ -106,11 +106,50 @@ h1 {
 <div class="card">
   <div class="check">✓</div>
   <h1>You're all set! 🎮</h1>
-  <p class="sub">Your RetroVault account is being set up right now. Check your email — your login details will arrive within the next minute.</p>
+  <p class="sub">Payment confirmed. Your account is being created right now — this usually takes about 30 seconds.</p>
 
   <div class="email-note">
-    <strong>Check your inbox</strong> for an email from <strong>billing@retrovaultpos.com</strong> with your temporary password and a link to get started. Check spam if you don't see it within 2 minutes.
+    <strong>Watch your inbox</strong> for an email from <strong>billing@retrovaultpos.com</strong> — it contains your temporary password and a direct link to your dashboard.<br><br>
+    <span style="color:#6b6b82">⏱ Usually arrives within 1–2 minutes. If you don't see it, check your spam folder.</span>
   </div>
+
+  <!-- Live status indicator -->
+  <div id="status-bar" style="background:#17171e;border:1px solid #2a2a38;border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px;text-align:left">
+    <div id="status-dot" style="width:10px;height:10px;border-radius:50%;background:#c8f135;flex-shrink:0;animation:pulse 1.5s ease infinite"></div>
+    <div>
+      <div id="status-text" style="font-size:13px;font-weight:600;color:#f2f2f7">Setting up your account...</div>
+      <div id="status-sub" style="font-size:11px;color:#6b6b82;margin-top:2px">Creating your store and sending login details</div>
+    </div>
+  </div>
+  <style>
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+  </style>
+  <script>
+    // Update status message over time to reassure the user
+    var msgs = [
+      [5,  'Setting up your account...', 'Creating your store and sending login details'],
+      [15, 'Almost there...', 'Sending your welcome email with login credentials'],
+      [30, 'Check your email now', 'Your login details should be arriving in your inbox'],
+      [90, 'Taking a bit longer than usual...', 'Check your email — it may have already arrived. Also check spam.'],
+    ];
+    var start = Date.now();
+    var interval = setInterval(function() {
+      var secs = Math.floor((Date.now() - start) / 1000);
+      var msg = msgs[0];
+      for (var i = msgs.length - 1; i >= 0; i--) {
+        if (secs >= msgs[i][0]) { msg = msgs[i]; break; }
+      }
+      var txt = document.getElementById('status-text');
+      var sub = document.getElementById('status-sub');
+      if (txt) txt.textContent = msg[1];
+      if (sub) sub.textContent = msg[2];
+      if (secs >= 90) {
+        var dot = document.getElementById('status-dot');
+        if (dot) dot.style.background = '#fbbf24';
+        clearInterval(interval);
+      }
+    }, 1000);
+  </script>
 
   <div class="steps">
     <div class="step">
