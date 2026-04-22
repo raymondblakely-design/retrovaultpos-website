@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're in! — RetroVault POS</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #080809;
+  color: #f2f2f7;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+.card {
+  background: #0f0f12;
+  border: 1px solid #1e1e28;
+  border-radius: 20px;
+  padding: 48px;
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.check {
+  width: 64px; height: 64px;
+  background: rgba(200,241,53,.1);
+  border: 2px solid rgba(200,241,53,.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 24px;
+  animation: pop .4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px; font-weight: 800;
+  margin-bottom: 12px;
+}
+.sub { font-size: 15px; color: #6b6b82; line-height: 1.7; margin-bottom: 32px; }
+.email-note {
+  background: #17171e;
+  border: 1px solid #2a2a38;
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-size: 13px;
+  color: #9ca3af;
+  line-height: 1.7;
+  margin-bottom: 28px;
+  text-align: left;
+}
+.email-note strong { color: #f2f2f7; }
+.steps {
+  text-align: left;
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.step {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px;
+  background: #17171e;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.step-num {
+  width: 22px; height: 22px;
+  background: rgba(200,241,53,.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #c8f135;
+  flex-shrink: 0; margin-top: 1px;
+}
+.step-text strong { display: block; font-weight: 600; margin-bottom: 2px; }
+.step-text span { color: #6b6b82; font-size: 12px; }
+.cta {
+  display: block; width: 100%;
+  padding: 14px;
+  background: #c8f135; color: #000;
+  border: none; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700;
+  cursor: pointer; text-decoration: none;
+  transition: opacity .2s;
+  margin-bottom: 12px;
+}
+.cta:hover { opacity: .88; }
+.note { font-size: 12px; color: #6b6b82; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="check">✓</div>
+  <h1>You're all set! 🎮</h1>
+  <p class="sub">Your RetroVault account is being set up right now. Check your email — your login details will arrive within the next minute.</p>
+
+  <div class="email-note">
+    <strong>Check your inbox</strong> for an email from <strong>billing@retrovaultpos.com</strong> with your temporary password and a link to get started. Check spam if you don't see it within 2 minutes.
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <strong>Check your email</strong>
+        <span>You'll get login details and a temporary password shortly</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <strong>Sign in to RetroVault</strong>
+        <span>Use your email and the temporary password from the email</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        <strong>Add your first inventory</strong>
+        <span>Scan a barcode or type an item name to get started</span>
+      </div>
+    </div>
+  </div>
+
+  <a href="index.html" class="cta">Open RetroVault →</a>
+  <p class="note">Your 14-day free trial has started. No charge until day 15.</p>
+</div>
+</body>
+</html>

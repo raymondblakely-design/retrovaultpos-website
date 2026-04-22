@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Start your free trial — RetroVault POS</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080809;
+  --bg2: #0f0f12;
+  --bg3: #17171e;
+  --border: #1e1e28;
+  --border2: #2a2a38;
+  --text: #f2f2f7;
+  --muted: #6b6b82;
+  --accent: #c8f135;
+  --red: #f87171;
+  --teal: #14b8a6;
+  --blue: #60a5fa;
+  --r: 10px;
+  --r-lg: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/* ── Left panel — value prop ── */
+.left {
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800;
+  color: var(--text); margin-bottom: 48px;
+}
+.logo-dot { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; }
+.left h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(28px, 3vw, 42px);
+  font-weight: 800; line-height: 1.1;
+  margin-bottom: 16px;
+}
+.left h1 em { font-style: normal; color: var(--accent); }
+.left p { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 36px; }
+.features { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
+.feature {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg3); border-radius: var(--r);
+  border: 1px solid var(--border);
+}
+.feature-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.feature-text { font-size: 13px; line-height: 1.5; }
+.feature-text strong { display: block; font-weight: 600; margin-bottom: 2px; }
+.feature-text span { color: var(--muted); }
+.trial-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(200,241,53,.08); border: 1px solid rgba(200,241,53,.2);
+  padding: 10px 16px; border-radius: 100px;
+  font-size: 13px; font-weight: 600; color: var(--accent);
+}
+.trial-badge-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+
+/* ── Right panel — form ── */
+.right {
+  padding: 48px;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+}
+.right-inner { max-width: 440px; width: 100%; margin: 0 auto; }
+.step-label {
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px;
+}
+.right h2 {
+  font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800;
+  margin-bottom: 6px;
+}
+.right .sub { font-size: 14px; color: var(--muted); margin-bottom: 32px; }
+
+/* Plan picker */
+.plan-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 24px; }
+.plan-card {
+  border: 1.5px solid var(--border2);
+  border-radius: var(--r);
+  padding: 14px 12px;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  text-align: center;
+  position: relative;
+}
+.plan-card:hover { border-color: var(--muted); }
+.plan-card.selected {
+  border-color: var(--accent);
+  background: rgba(200,241,53,.06);
+}
+.plan-card input[type=radio] { position: absolute; opacity: 0; }
+.plan-name { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; }
+.plan-price { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 700; color: var(--text); }
+.plan-price sub { font-size: 11px; font-weight: 400; color: var(--muted); }
+.plan-badge {
+  position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: #000; font-size: 9px; font-weight: 800;
+  padding: 2px 8px; border-radius: 100px; white-space: nowrap;
+  text-transform: uppercase; letter-spacing: .4px;
+}
+
+/* Form fields */
+.form-group { margin-bottom: 14px; }
+.form-group label {
+  display: block; font-size: 11px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .4px; margin-bottom: 6px;
+}
+.form-group input {
+  width: 100%; padding: 11px 14px;
+  background: var(--bg3); border: 1.5px solid var(--border2);
+  border-radius: var(--r); color: var(--text); font-size: 14px;
+  font-family: 'DM Sans', sans-serif; outline: none;
+  transition: border-color .2s;
+}
+.form-group input:focus { border-color: var(--accent); }
+.form-group input::placeholder { color: var(--muted); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.submit-btn {
+  width: 100%; padding: 14px;
+  background: var(--accent); color: #000;
+  border: none; border-radius: var(--r);
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: opacity .2s, transform .2s;
+  margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.submit-btn:hover:not(:disabled) { opacity: .88; transform: translateY(-1px); }
+.submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+.error-box {
+  background: rgba(248,113,113,.08); border: 1px solid rgba(248,113,113,.2);
+  border-radius: var(--r); padding: 10px 14px;
+  font-size: 13px; color: var(--red); margin-bottom: 14px;
+  display: none;
+}
+.fine-print {
+  font-size: 11px; color: var(--muted); text-align: center;
+  margin-top: 14px; line-height: 1.6;
+}
+.fine-print a { color: var(--muted); text-decoration: underline; }
+.already { font-size: 13px; color: var(--muted); text-align: center; margin-top: 24px; }
+.already a { color: var(--accent); text-decoration: none; font-weight: 600; }
+
+/* Cancelled banner */
+.cancelled-banner {
+  background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.2);
+  border-radius: var(--r); padding: 10px 14px; font-size: 13px; color: #fbbf24;
+  margin-bottom: 16px; display: none;
+}
+
+@media (max-width: 768px) {
+  body { grid-template-columns: 1fr; }
+  .left { display: none; }
+  .right { padding: 32px 24px; min-height: 100vh; }
+}
+</style>
+</head>
+<body>
+
+<!-- Left: value prop -->
+<div class="left">
+  <a href="index.html" class="logo" style="text-decoration:none">
+    <div class="logo-dot"></div>
+    RetroVault POS
+  </a>
+  <h1>The POS built for <em>game stores</em></h1>
+  <p>Market pricing, trade-in calculator, consignment tracking — everything your store needs, nothing it doesn't.</p>
+
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">📡</div>
+      <div class="feature-text">
+        <strong>Live eBay market pricing</strong>
+        <span>Know exactly what to offer on trade-ins. Updated nightly from real sold listings.</span>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">↔</div>
+      <div class="feature-text">
+        <strong>Trade-in calculator</strong>
+        <span>Cash and store credit offers calculated automatically. Print invoices, track history.</span>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📦</div>
+      <div class="feature-text">
+        <strong>Condition-aware inventory</strong>
+        <span>Loose, CIB, sealed — tracked properly with SKUs, pricing, and cover art.</span>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon"> </div>
+      <div class="feature-text">
+        <strong>Consignment tracking</strong>
+        <span>Auto-calculated splits, payout history, and a self-service portal for consignors.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="trial-badge">
+    <span class="trial-badge-dot"></span>
+    14-day free trial · No charge until day 15 · Cancel anytime
+  </div>
+</div>
+
+<!-- Right: signup form -->
+<div class="right">
+  <div class="right-inner">
+    <div class="cancelled-banner" id="cancelled-banner">
+      You cancelled checkout — no worries! Fill out the form again whenever you're ready.
+    </div>
+
+    <div class="step-label">Get started free</div>
+    <h2>Start your 14-day trial</h2>
+    <p class="sub">Enter your card now — you won't be charged for 14 days. Cancel anytime.</p>
+
+    <!-- Plan picker -->
+    <div class="plan-grid" id="plan-grid">
+      <label class="plan-card" id="card-starter">
+        <input type="radio" name="plan" value="starter" onchange="selectPlan('starter')">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">$49<sub>/mo</sub></div>
+      </label>
+      <label class="plan-card selected" id="card-pro">
+        <div class="plan-badge">Most popular</div>
+        <input type="radio" name="plan" value="pro" checked onchange="selectPlan('pro')">
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">$89<sub>/mo</sub></div>
+      </label>
+      <label class="plan-card" id="card-multi">
+        <input type="radio" name="plan" value="multi" onchange="selectPlan('multi')">
+        <div class="plan-name">Multi-Store</div>
+        <div class="plan-price">$129<sub>/mo</sub></div>
+      </label>
+    </div>
+
+    <!-- Form -->
+    <div class="error-box" id="error-box"></div>
+
+    <div class="form-group">
+      <label>Store name *</label>
+      <input type="text" id="store-name" placeholder="e.g. Star Gaming" autocomplete="organization">
+    </div>
+    <div class="form-group">
+      <label>Your name *</label>
+      <input type="text" id="owner-name" placeholder="e.g. Raymond Blakely" autocomplete="name">
+    </div>
+    <div class="form-group">
+      <label>Email address *</label>
+      <input type="email" id="email" placeholder="you@yourstore.com" autocomplete="email">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>City</label>
+        <input type="text" id="city" placeholder="e.g. Austin" autocomplete="address-level2">
+      </div>
+      <div class="form-group">
+        <label>State</label>
+        <input type="text" id="state" placeholder="e.g. TX" maxlength="2" autocomplete="address-level1">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Phone <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <input type="tel" id="phone" placeholder="555-000-0000" autocomplete="tel">
+    </div>
+
+    <button class="submit-btn" id="submit-btn" onclick="startCheckout()">
+      Start free trial — 14 days free →
+    </button>
+
+    <p class="fine-print">
+      By signing up you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.<br>
+      Requires internet connection. <a href="landing.html">Learn more about RetroVault →</a>
+    </p>
+
+    <p class="already">Already have an account? <a href="index.html">Sign in →</a></p>
+  </div>
+</div>
+
+<script>
+const EDGE_URL = 'https://obfztbtktpiqiieziheq.supabase.co/functions/v1/create-checkout';
+let selectedPlan = 'pro';
+
+// Show cancelled banner if coming back from cancelled checkout
+if (new URLSearchParams(window.location.search).get('cancelled')) {
+  document.getElementById('cancelled-banner').style.display = 'block';
+}
+
+// Pre-select plan from URL param (e.g. from landing page pricing cards)
+const urlPlan = new URLSearchParams(window.location.search).get('plan');
+if (urlPlan && ['starter','pro','multi'].includes(urlPlan)) {
+  selectPlan(urlPlan);
+  document.querySelector(`input[value="${urlPlan}"]`).checked = true;
+}
+
+function selectPlan(plan) {
+  selectedPlan = plan;
+  ['starter','pro','multi'].forEach(function(p) {
+    document.getElementById('card-' + p).classList.toggle('selected', p === plan);
+  });
+}
+
+async function startCheckout() {
+  var storeName = document.getElementById('store-name').value.trim();
+  var ownerName = document.getElementById('owner-name').value.trim();
+  var email     = document.getElementById('email').value.trim();
+  var city      = document.getElementById('city').value.trim();
+  var state     = document.getElementById('state').value.trim().toUpperCase();
+  var phone     = document.getElementById('phone').value.trim();
+
+  var errBox = document.getElementById('error-box');
+  errBox.style.display = 'none';
+
+  function showErr(msg) {
+    errBox.textContent = '⚠ ' + msg;
+    errBox.style.display = 'block';
+    errBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  if (!storeName) return showErr('Store name is required');
+  if (!ownerName) return showErr('Your name is required');
+  if (!email || !email.includes('@')) return showErr('Valid email address is required');
+
+  var btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Setting up checkout...';
+
+  try {
+    var res = await fetch(EDGE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        plan:         selectedPlan,
+        store_name:   storeName,
+        owner_name:   ownerName,
+        email,
+        store_city:   city  || null,
+        store_state:  state || null,
+        store_phone:  phone || null,
+      }),
+    });
+
+    var data = await res.json();
+
+    if (!res.ok || data.error) {
+      throw new Error(data.error || 'Something went wrong. Please try again.');
+    }
+
+    // Redirect to Stripe Checkout
+    window.location.href = data.url;
+
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = 'Start free trial — 14 days free →';
+    showErr(e.message);
+  }
+}
+
+// Allow Enter to submit
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && e.target.tagName === 'INPUT') startCheckout();
+});
+</script>
+</body>
+</html>

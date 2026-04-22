@@ -3,1124 +3,773 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RetroVault POS — The Operating System for Game Stores</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>RetroVault — The POS Built for Game Stores</title>
+<meta name="description" content="Market pricing, trade-in calculator, consignment tracking, and full POS — built for retro game and collectible stores. Not Square. Not SimpleConsign. RetroVault.">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ── Reset & Variables ─────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --lime:    #c8f135;
-  --lime-dk: #a8d420;
-  --dark:    #0a0a0f;
-  --dark2:   #13131a;
-  --dark3:   #1e1e2a;
-  --ink:     #1a1a2e;
-  --slate:   #f0f2f5;
-  --slate2:  #e4e8ef;
-  --slate3:  #d0d6e0;
-  --body:    #ffffff;
-  --text:    #1a1a2e;
-  --muted:   #6b7280;
-  --border:  #e2e8f0;
-  --teal:    #06b6d4;
-  --radius:  12px;
-  --radius-lg: 20px;
+  --bg: #080809;
+  --bg2: #0f0f12;
+  --bg3: #16161c;
+  --border: #1e1e28;
+  --border2: #27273a;
+  --text: #f2f2f7;
+  --muted: #6b6b82;
+  --accent: #c8f135;
+  --teal: #14b8a6;
+  --blue: #60a5fa;
+  --red: #f87171;
+  --amber: #fbbf24;
 }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; }
 
 body {
   font-family: 'DM Sans', sans-serif;
-  background: var(--body);
+  background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
   line-height: 1.6;
 }
 
-/* ── Nav ────────────────────────────────────────────────────── */
+/* ── Grid background ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Nav ── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: var(--dark);
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 5%;
-  height: 64px;
-  border-bottom: 1px solid rgba(200,241,53,.12);
+  padding: 0 40px; height: 60px;
+  background: rgba(8,8,9,.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
 }
-
 .nav-logo {
   display: flex; align-items: center; gap: 10px;
-  font-family: 'Syne', sans-serif;
-  font-weight: 800; font-size: 18px;
-  color: var(--lime);
-  text-decoration: none;
+  font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800;
+  color: var(--text); text-decoration: none;
 }
-
-.nav-logo .dot { width: 8px; height: 8px; background: var(--lime); border-radius: 50%; display: inline-block; }
-
-.nav-links { display: flex; align-items: center; gap: 32px; }
-.nav-links a { color: rgba(255,255,255,.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
-.nav-links a:hover { color: #fff; }
-
+.nav-dot { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; }
+.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-links a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .2s; }
+.nav-links a:hover { color: var(--text); }
 .nav-cta {
-  background: var(--lime); color: var(--dark);
-  padding: 8px 20px; border-radius: 8px;
-  font-weight: 700; font-size: 14px;
-  text-decoration: none;
-  transition: background .2s, transform .15s;
+  padding: 8px 20px; background: var(--accent); color: #0a0a0d;
+  border-radius: 6px; font-size: 13px; font-weight: 700;
+  text-decoration: none; transition: opacity .2s;
 }
-.nav-cta:hover { background: var(--lime-dk); transform: translateY(-1px); }
+.nav-cta:hover { opacity: .85; }
 
-/* ── Hero ───────────────────────────────────────────────────── */
+/* ── Sections ── */
+section { position: relative; z-index: 1; }
+
+/* ── Hero ── */
 .hero {
   min-height: 100vh;
-  background: var(--dark);
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  padding: 100px 5% 80px;
-  position: relative;
-  overflow: hidden;
   text-align: center;
+  padding: 120px 20px 80px;
 }
-
-/* Grid background */
-.hero::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(200,241,53,.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(200,241,53,.04) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-
-/* Glow */
-.hero::after {
-  content: '';
-  position: absolute;
-  top: 20%; left: 50%; transform: translateX(-50%);
-  width: 600px; height: 400px;
-  background: radial-gradient(ellipse, rgba(200,241,53,.12) 0%, transparent 70%);
-  pointer-events: none;
-}
-
 .hero-badge {
   display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(200,241,53,.1);
-  border: 1px solid rgba(200,241,53,.25);
-  color: var(--lime);
+  background: rgba(200,241,53,.08); border: 1px solid rgba(200,241,53,.2);
   padding: 6px 16px; border-radius: 100px;
-  font-size: 12px; font-weight: 600; letter-spacing: .5px;
-  text-transform: uppercase;
-  margin-bottom: 28px;
-  position: relative; z-index: 1;
+  font-size: 11px; font-weight: 700; color: var(--accent);
+  text-transform: uppercase; letter-spacing: .8px;
+  margin-bottom: 32px;
   animation: fadeUp .6s ease both;
 }
+.hero-badge .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
 .hero h1 {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(42px, 7vw, 80px);
-  font-weight: 800;
-  line-height: 1.05;
-  color: #fff;
-  margin-bottom: 24px;
-  position: relative; z-index: 1;
+  font-size: clamp(42px, 7vw, 82px);
+  font-weight: 800; line-height: 1.0;
+  max-width: 900px;
   animation: fadeUp .6s .1s ease both;
 }
-
-.hero h1 span { color: var(--lime); }
-
+.hero h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
 .hero-sub {
-  font-size: clamp(17px, 2vw, 20px);
-  color: rgba(255,255,255,.6);
-  max-width: 560px;
-  margin: 0 auto 40px;
-  font-weight: 400;
-  position: relative; z-index: 1;
+  font-size: clamp(16px, 2vw, 20px);
+  color: var(--muted); max-width: 560px;
+  margin: 24px auto 40px;
+  line-height: 1.7;
   animation: fadeUp .6s .2s ease both;
 }
-
-.hero-ctas {
-  display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
-  position: relative; z-index: 1;
+.hero-actions {
+  display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
   animation: fadeUp .6s .3s ease both;
 }
-
 .btn-primary {
-  background: var(--lime); color: var(--dark);
-  padding: 14px 32px; border-radius: 10px;
-  font-weight: 700; font-size: 15px;
-  text-decoration: none;
-  transition: all .2s;
-  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; background: var(--accent); color: #0a0a0d;
+  border-radius: 8px; font-size: 15px; font-weight: 700;
+  text-decoration: none; transition: transform .2s, opacity .2s;
+  display: inline-block;
 }
-.btn-primary:hover { background: var(--lime-dk); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,241,53,.3); }
-
+.btn-primary:hover { transform: translateY(-2px); opacity: .9; }
 .btn-ghost {
-  border: 1px solid rgba(255,255,255,.2); color: #fff;
-  padding: 14px 32px; border-radius: 10px;
-  font-weight: 600; font-size: 15px;
-  text-decoration: none;
-  transition: all .2s;
+  padding: 14px 32px; background: transparent;
+  border: 1px solid var(--border2); color: var(--text);
+  border-radius: 8px; font-size: 15px; font-weight: 600;
+  text-decoration: none; transition: border-color .2s;
+  display: inline-block;
 }
-.btn-ghost:hover { border-color: rgba(255,255,255,.5); background: rgba(255,255,255,.05); }
+.btn-ghost:hover { border-color: var(--muted); }
 
-/* Stats bar */
-.hero-stats {
-  display: flex; gap: 48px; justify-content: center; flex-wrap: wrap;
-  margin-top: 72px;
-  padding-top: 40px;
-  border-top: 1px solid rgba(255,255,255,.08);
-  position: relative; z-index: 1;
-  animation: fadeUp .6s .4s ease both;
-}
-
-.stat { text-align: center; }
-.stat-num {
-  font-family: 'Syne', sans-serif;
-  font-size: 32px; font-weight: 800;
-  color: var(--lime); line-height: 1;
-}
-.stat-label { font-size: 13px; color: rgba(255,255,255,.5); margin-top: 4px; }
-
-/* ── Section base ───────────────────────────────────────────── */
-section { padding: 100px 5%; }
-
-.section-label {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(200,241,53,.08);
-  border: 1px solid rgba(200,241,53,.2);
-  color: var(--lime-dk);
-  padding: 5px 14px; border-radius: 100px;
-  font-size: 11px; font-weight: 700; letter-spacing: .8px;
-  text-transform: uppercase;
-  margin-bottom: 16px;
-}
-
-.section-title {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(28px, 4vw, 44px);
-  font-weight: 800;
-  line-height: 1.15;
-  color: var(--ink);
-  margin-bottom: 16px;
-}
-
-.section-sub {
-  font-size: 17px;
-  color: var(--muted);
-  max-width: 540px;
-  line-height: 1.7;
-}
-
-/* ── Problem section ────────────────────────────────────────── */
-.problem {
-  background: var(--slate);
-}
-
-.problem-inner {
-  max-width: 1100px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
-}
-
-.pain-list { list-style: none; margin-top: 32px; display: flex; flex-direction: column; gap: 16px; }
-.pain-item {
-  display: flex; gap: 14px; align-items: flex-start;
-  padding: 18px 20px;
-  background: #fff;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  transition: transform .2s, box-shadow .2s;
-}
-.pain-item:hover { transform: translateX(4px); box-shadow: 0 4px 20px rgba(0,0,0,.06); }
-.pain-icon { font-family: "DM Mono", monospace; font-size: 11px; font-weight: 700; color: var(--lime); flex-shrink: 0; margin-top: 4px; letter-spacing: .5px; }
-.pain-text strong { display: block; font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 2px; }
-.pain-text span { font-size: 13px; color: var(--muted); }
-
-.solution-card {
-  background: var(--dark);
-  border-radius: var(--radius-lg);
-  padding: 40px;
-  position: relative;
-  overflow: hidden;
-}
-.solution-card::before {
-  content: '';
-  position: absolute; top: -40px; right: -40px;
-  width: 200px; height: 200px;
-  background: radial-gradient(circle, rgba(200,241,53,.15) 0%, transparent 70%);
-}
-.solution-card h3 {
-  font-family: 'Syne', sans-serif;
-  font-size: 22px; font-weight: 700;
-  color: #fff; margin-bottom: 8px;
-}
-.solution-card p { color: rgba(255,255,255,.6); font-size: 14px; margin-bottom: 28px; line-height: 1.7; }
-.solution-features { display: flex; flex-direction: column; gap: 12px; }
-.sol-feat {
-  display: flex; gap: 12px; align-items: center;
-  padding: 12px 16px;
-  background: rgba(200,241,53,.06);
-  border: 1px solid rgba(200,241,53,.12);
-  border-radius: 10px;
-}
-.sol-feat-icon { color: var(--lime); font-size: 16px; }
-.sol-feat-text { font-size: 13px; font-weight: 500; color: rgba(255,255,255,.85); }
-
-/* ── Features ───────────────────────────────────────────────── */
-.features { background: #fff; }
-.features-inner { max-width: 1100px; margin: 0 auto; }
-.features-header { text-align: center; margin-bottom: 64px; }
-.features-header .section-sub { margin: 0 auto; }
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.feat-card {
-  background: var(--slate);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 32px;
-  transition: transform .2s, box-shadow .2s, border-color .2s;
-  position: relative;
-  overflow: hidden;
-}
-.feat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0,0,0,.08);
-  border-color: var(--lime-dk);
-}
-.feat-card.featured {
-  background: var(--dark);
-  border-color: rgba(200,241,53,.3);
-  grid-column: span 2;
-}
-.feat-card.featured .feat-title { color: #fff; }
-.feat-card.featured .feat-desc { color: rgba(255,255,255,.6); }
-
-.feat-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+/* Hero UI mockup */
+.hero-mockup {
+  margin-top: 64px;
+  width: 100%; max-width: 900px;
   background: var(--bg2);
   border: 1px solid var(--border2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--lime);
-  font-family: "DM Mono", monospace;
-  margin-bottom: 16px;
-  flex-shrink: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 40px 120px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04);
+  animation: fadeUp .8s .4s ease both;
 }
-.feat-card.featured .feat-icon { background: rgba(200,241,53,.15); }
-
-.feat-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 18px; font-weight: 700;
-  color: var(--ink); margin-bottom: 8px;
-}
-
-.feat-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
-
-/* Screenshot placeholder — removed
-.screenshot-placeholder {
-  background: var(--dark3);
-  border: 1px solid rgba(200,241,53,.15);
-  border-radius: 12px;
-  margin-top: 24px;
-  height: 180px;
-  display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: 8px;
-  color: rgba(255,255,255,.3);
-  font-size: 13px;
-}
-.screenshot-placeholder .ph-icon { font-size: 28px; opacity: .4; } */
-
-/* ── How it works ───────────────────────────────────────────── */
-.how { background: var(--slate); }
-.how-inner { max-width: 900px; margin: 0 auto; }
-.how-header { text-align: center; margin-bottom: 64px; }
-
-.steps { display: flex; flex-direction: column; gap: 0; }
-.step {
-  display: grid;
-  grid-template-columns: 60px 1fr;
-  gap: 28px;
-  padding-bottom: 48px;
-  position: relative;
-}
-.step:not(:last-child)::before {
-  content: '';
-  position: absolute;
-  left: 29px; top: 60px; bottom: 0;
-  width: 2px;
-  background: linear-gradient(to bottom, var(--lime-dk), transparent);
-}
-.step-num {
-  width: 60px; height: 60px;
-  background: var(--dark);
-  border: 2px solid var(--lime);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Syne', sans-serif;
-  font-size: 20px; font-weight: 800;
-  color: var(--lime);
-  flex-shrink: 0;
-  position: relative; z-index: 1;
-}
-.step-content { padding-top: 14px; }
-.step-content h3 {
-  font-family: 'Syne', sans-serif;
-  font-size: 20px; font-weight: 700;
-  color: var(--ink); margin-bottom: 8px;
-}
-.step-content p { font-size: 15px; color: var(--muted); line-height: 1.7; }
-
-/* ── Pricing ────────────────────────────────────────────────── */
-.pricing { background: #fff; }
-.pricing-inner { max-width: 1000px; margin: 0 auto; }
-.pricing-header { text-align: center; margin-bottom: 56px; }
-
-.pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  align-items: start;
-}
-
-.plan {
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 36px 32px;
-  transition: transform .2s, box-shadow .2s;
-}
-.plan:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.08); }
-.plan.popular {
-  border-color: var(--lime-dk);
-  background: var(--dark);
-  position: relative;
-}
-.plan.popular .plan-name,
-.plan.popular .plan-price,
-.plan.popular .plan-desc,
-.plan.popular .plan-feature { color: rgba(255,255,255,.85); }
-.plan.popular .plan-name { color: var(--lime); }
-.plan.popular .plan-feature { border-color: rgba(255,255,255,.08); }
-
-.popular-badge {
-  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-  background: var(--lime); color: var(--dark);
-  font-size: 11px; font-weight: 700; letter-spacing: .5px;
-  text-transform: uppercase; padding: 4px 14px; border-radius: 100px;
-  white-space: nowrap;
-}
-
-.plan-name { font-size: 13px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
-.plan-price {
-  font-family: 'Syne', sans-serif;
-  font-size: 48px; font-weight: 800;
-  color: var(--ink); line-height: 1;
-  margin-bottom: 4px;
-}
-.plan-price span { font-size: 18px; font-weight: 600; }
-.plan-period { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
-.plan-desc { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
-.plan.popular .plan-desc { border-color: rgba(255,255,255,.1); }
-
-.plan-features { display: flex; flex-direction: column; gap: 0; margin-bottom: 32px; }
-.plan-feature {
-  display: flex; gap: 10px; align-items: flex-start;
-  padding: 10px 0;
+.mockup-bar {
+  background: var(--bg3); padding: 12px 16px;
+  display: flex; align-items: center; gap: 8px;
   border-bottom: 1px solid var(--border);
-  font-size: 14px; color: var(--text);
 }
-.plan-feature:last-child { border-bottom: none; }
-.check { color: var(--lime-dk); font-size: 15px; flex-shrink: 0; margin-top: 1px; }
-
-.plan-btn {
-  display: block; text-align: center;
-  padding: 13px; border-radius: 10px;
-  font-weight: 700; font-size: 14px;
-  text-decoration: none; transition: all .2s;
-  background: var(--slate2); color: var(--ink);
+.mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+.mockup-inner { padding: 24px; display: grid; grid-template-columns: 200px 1fr; gap: 16px; min-height: 320px; }
+.mockup-sidebar {
+  background: var(--bg3); border-radius: 8px; padding: 14px;
+  display: flex; flex-direction: column; gap: 6px;
 }
-.plan-btn:hover { background: var(--slate3); }
-.plan.popular .plan-btn { background: var(--lime); color: var(--dark); }
-.plan.popular .plan-btn:hover { background: var(--lime-dk); }
+.mockup-nav-item {
+  padding: 8px 10px; border-radius: 6px; font-size: 11px;
+  display: flex; align-items: center; gap: 8px; color: var(--muted);
+}
+.mockup-nav-item.active {
+  background: rgba(200,241,53,.1); color: var(--accent); font-weight: 600;
+}
+.mockup-content { display: flex; flex-direction: column; gap: 12px; }
+.mockup-metrics { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.mockup-metric {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px 14px;
+}
+.mockup-metric .m-lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; }
+.mockup-metric .m-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 700; }
+.mockup-table { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; flex: 1; }
+.mockup-th { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 80px; padding: 8px 12px; border-bottom: 1px solid var(--border); font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+.mockup-tr { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 80px; padding: 9px 12px; border-bottom: 1px solid var(--border); font-size: 11px; align-items: center; }
+.mockup-tr:last-child { border-bottom: none; }
+.cond-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 100px; }
 
-/* ── Founder ─────────────────────────────────────────────────── */
-.founder {
-  background: var(--dark);
+/* ── Pain section ── */
+.pain {
+  padding: 100px 40px;
+  max-width: 1100px; margin: 0 auto;
+}
+.section-label {
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .8px; margin-bottom: 16px;
+}
+.pain h2 {
+  font-family: 'Syne', sans-serif; font-size: clamp(28px, 4vw, 46px);
+  font-weight: 800; line-height: 1.15; max-width: 640px; margin-bottom: 48px;
+}
+.pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.pain-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px;
+  transition: border-color .3s;
+}
+.pain-card:hover { border-color: var(--border2); }
+.pain-icon { font-size: 28px; margin-bottom: 14px; }
+.pain-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.pain-card p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+/* ── Features ── */
+.features {
+  padding: 100px 40px;
+  max-width: 1100px; margin: 0 auto;
+}
+.features h2 {
+  font-family: 'Syne', sans-serif; font-size: clamp(28px, 4vw, 46px);
+  font-weight: 800; line-height: 1.15; margin-bottom: 60px; text-align: center;
+}
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2px; }
+.feature-card {
+  background: var(--bg2); padding: 32px;
+  border: 1px solid var(--border);
+  transition: background .3s;
+  position: relative; overflow: hidden;
+}
+.feature-card:hover { background: var(--bg3); }
+.feature-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0; transition: opacity .3s;
+}
+.feature-card:hover::before { opacity: 1; }
+.feature-num {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--accent); margin-bottom: 16px; opacity: .6;
+}
+.feature-card h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+.feature-card p { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+
+/* Feature mini-UIs */
+.feature-ui {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px; font-size: 11px;
+}
+.price-card-mini {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;
+}
+.pcm { background: var(--bg2); border-radius: 6px; padding: 8px; }
+.pcm .pcm-label { font-size: 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .3px; margin-bottom: 4px; }
+.pcm .pcm-price { font-family: 'DM Mono', monospace; font-weight: 700; }
+.pcm .pcm-offer { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--accent); }
+.ti-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
+.ti-row:last-child { border-bottom: none; }
+.inv-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--border); }
+.inv-row:last-child { border-bottom: none; }
+.tag { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 100px; }
+.tag-green { background: rgba(20,184,166,.15); color: var(--teal); }
+.tag-amber { background: rgba(251,191,36,.15); color: var(--amber); }
+.tag-blue  { background: rgba(96,165,250,.15);  color: var(--blue); }
+
+/* ── Comparison ── */
+.comparison {
+  padding: 100px 40px;
+  max-width: 900px; margin: 0 auto;
+}
+.comparison h2 {
+  font-family: 'Syne', sans-serif; font-size: clamp(28px, 4vw, 46px);
+  font-weight: 800; text-align: center; margin-bottom: 12px;
+}
+.comparison-sub { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 48px; }
+.comp-table { width: 100%; border-collapse: collapse; background: var(--bg2); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
+.comp-table th {
+  padding: 16px 20px; font-size: 12px; font-weight: 700; text-align: center;
+  border-bottom: 1px solid var(--border); background: var(--bg3);
+}
+.comp-table th:first-child { text-align: left; }
+.comp-table th.rv { color: var(--accent); background: rgba(200,241,53,.06); }
+.comp-table td { padding: 13px 20px; font-size: 13px; border-bottom: 1px solid var(--border); text-align: center; }
+.comp-table td:first-child { text-align: left; color: var(--text); font-weight: 500; }
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-table tr:hover td { background: rgba(255,255,255,.015); }
+.comp-check { color: var(--teal); font-size: 16px; }
+.comp-x { color: var(--red); font-size: 16px; }
+.comp-partial { color: var(--amber); font-size: 12px; }
+
+/* ── Pricing ── */
+.pricing {
+  padding: 100px 40px;
+  max-width: 900px; margin: 0 auto; text-align: center;
+}
+.pricing h2 {
+  font-family: 'Syne', sans-serif; font-size: clamp(28px, 4vw, 46px);
+  font-weight: 800; margin-bottom: 12px;
+}
+.pricing-sub { color: var(--muted); font-size: 15px; margin-bottom: 48px; }
+.pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; text-align: left; }
+.pricing-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px; position: relative;
+}
+.pricing-card.featured {
+  border-color: rgba(200,241,53,.4);
+  background: rgba(200,241,53,.04);
+}
+.pricing-badge {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: #0a0a0d;
+  font-size: 10px; font-weight: 800; padding: 4px 14px; border-radius: 100px;
+  text-transform: uppercase; letter-spacing: .5px; white-space: nowrap;
+}
+.pricing-plan { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 12px; }
+.pricing-price { font-family: 'DM Mono', monospace; font-size: 40px; font-weight: 500; line-height: 1; margin-bottom: 4px; }
+.pricing-price sup { font-size: 18px; vertical-align: top; margin-top: 8px; display: inline-block; }
+.pricing-period { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+.pricing-features { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.pricing-features li { font-size: 13px; display: flex; align-items: flex-start; gap: 8px; }
+.pricing-features li::before { content: '✓'; color: var(--teal); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.pricing-cta {
+  display: block; text-align: center; padding: 11px; border-radius: 8px;
+  font-size: 14px; font-weight: 700; text-decoration: none; transition: opacity .2s;
+}
+.pricing-cta.primary { background: var(--accent); color: #0a0a0d; }
+.pricing-cta.ghost { border: 1px solid var(--border2); color: var(--text); }
+.pricing-cta:hover { opacity: .8; }
+
+/* ── CTA footer ── */
+.cta-section {
+  padding: 120px 40px;
+  text-align: center;
   position: relative;
   overflow: hidden;
 }
-.founder::before {
+.cta-section::before {
   content: '';
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(200,241,53,.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(200,241,53,.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+  position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 600px; height: 400px;
+  background: radial-gradient(ellipse, rgba(200,241,53,.08) 0%, transparent 70%);
+  pointer-events: none;
 }
-.founder-inner {
-  max-width: 760px; margin: 0 auto; text-align: center;
-  position: relative; z-index: 1;
-}
-.founder-avatar {
-  width: 72px; height: 72px;
-  background: linear-gradient(135deg, var(--lime), var(--teal));
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
+.cta-section h2 {
   font-family: 'Syne', sans-serif;
-  font-size: 26px; font-weight: 800; color: var(--dark);
-  margin: 0 auto 28px;
+  font-size: clamp(32px, 5vw, 60px);
+  font-weight: 800; line-height: 1.1;
+  max-width: 700px; margin: 0 auto 20px;
 }
-.founder blockquote {
-  font-size: clamp(18px, 2.5vw, 26px);
-  font-style: italic;
-  color: rgba(255,255,255,.85);
-  line-height: 1.6;
-  margin-bottom: 24px;
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 300;
-}
-.founder cite {
-  font-size: 14px; color: var(--lime);
-  font-style: normal; font-weight: 600;
-}
-.founder cite span { color: rgba(255,255,255,.4); font-weight: 400; }
+.cta-section p { font-size: 16px; color: var(--muted); margin-bottom: 36px; }
+.cta-note { font-size: 12px; color: var(--muted); margin-top: 16px; }
 
-/* ── Demo form ───────────────────────────────────────────────── */
-.demo {
-  background: var(--slate);
-}
-.demo-inner {
-  max-width: 620px; margin: 0 auto; text-align: center;
-}
-.demo-inner .section-title { margin-bottom: 8px; }
-.demo-inner .section-sub { margin: 0 auto 40px; }
-
-.demo-form {
-  background: #fff;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 40px;
-  text-align: left;
-}
-
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-.form-group label { font-size: 13px; font-weight: 600; color: var(--ink); }
-.form-group input,
-.form-group select,
-.form-group textarea {
-  padding: 11px 14px;
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  font-size: 14px;
-  font-family: 'DM Sans', sans-serif;
-  color: var(--ink);
-  background: var(--slate);
-  transition: border-color .2s, box-shadow .2s;
-  outline: none;
-  width: 100%;
-}
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  border-color: var(--lime-dk);
-  box-shadow: 0 0 0 3px rgba(200,241,53,.12);
-  background: #fff;
-}
-.form-group textarea { resize: vertical; min-height: 90px; }
-
-.form-submit {
-  width: 100%;
-  background: var(--dark); color: var(--lime);
-  border: none; cursor: pointer;
-  padding: 15px 32px;
-  border-radius: 10px;
-  font-family: 'Syne', sans-serif;
-  font-size: 16px; font-weight: 700;
-  transition: all .2s;
-  margin-top: 8px;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.form-submit:hover { background: var(--dark2); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,.15); }
-
-.form-note { text-align: center; margin-top: 16px; font-size: 12px; color: var(--muted); }
-
-#form-success {
-  display: none;
-  text-align: center; padding: 32px;
-}
-#form-success .success-icon { font-size: 48px; margin-bottom: 16px; color: var(--lime); font-weight: 700; }
-#form-success h3 { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
-#form-success p { color: var(--muted); font-size: 14px; }
-
-/* ── Footer ─────────────────────────────────────────────────── */
+/* ── Footer ── */
 footer {
-  background: var(--dark);
-  padding: 48px 5%;
-  border-top: 1px solid rgba(255,255,255,.06);
+  border-top: 1px solid var(--border);
+  padding: 32px 40px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
 }
-.footer-inner {
-  max-width: 1100px; margin: 0 auto;
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 20px;
-}
-.footer-logo {
-  font-family: 'Syne', sans-serif;
-  font-size: 16px; font-weight: 800; color: var(--lime);
-}
+.footer-brand { display: flex; align-items: center; gap: 8px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800; }
 .footer-links { display: flex; gap: 24px; }
-.footer-links a { color: rgba(255,255,255,.4); font-size: 13px; text-decoration: none; transition: color .2s; }
-.footer-links a:hover { color: rgba(255,255,255,.8); }
-.footer-copy { font-size: 12px; color: rgba(255,255,255,.25); }
+.footer-links a { font-size: 12px; color: var(--muted); text-decoration: none; }
+.footer-links a:hover { color: var(--text); }
 
-/* ── Animations ─────────────────────────────────────────────── */
+/* ── Animations ── */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 .reveal {
-  opacity: 0; transform: translateY(24px);
+  opacity: 0; transform: translateY(20px);
   transition: opacity .6s ease, transform .6s ease;
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 
-/* ── Responsive ─────────────────────────────────────────────── */
+/* ── Responsive ── */
 @media (max-width: 768px) {
-  .problem-inner { grid-template-columns: 1fr; gap: 40px; }
-  .features-grid { grid-template-columns: 1fr; }
-  .feat-card.featured { grid-column: span 1; }
-  .pricing-grid { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr; }
+  nav { padding: 0 20px; }
   .nav-links { display: none; }
-  .footer-inner { flex-direction: column; text-align: center; }
-  .hero-stats { gap: 24px; }
+  .pain, .features, .comparison, .pricing, .cta-section { padding: 60px 20px; }
+  .mockup-inner { grid-template-columns: 1fr; }
+  .mockup-sidebar { display: none; }
+  footer { padding: 24px 20px; flex-direction: column; text-align: center; }
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<!-- ── Navigation ─────────────────────────────────────────── -->
+<!-- Nav -->
 <nav>
-  <a href="#" class="nav-logo">
-    <span class="dot"></span>
-    RetroVault POS
+  <a class="nav-logo" href="#">
+    <span class="nav-dot"></span>
+    RetroVault
   </a>
   <div class="nav-links">
     <a href="#features">Features</a>
-    <a href="#how">How it works</a>
+    <a href="#comparison">vs Competitors</a>
     <a href="#pricing">Pricing</a>
-    <a href="#demo">Waitlist</a>
   </div>
-  <a href="#demo" class="nav-cta">Join the waitlist →</a>
+  <a class="nav-cta" href="signup.html">Request demo</a>
 </nav>
 
-<!-- ── Hero ───────────────────────────────────────────────── -->
+<!-- Hero -->
 <section class="hero">
-  <h1>The <span>operating system</span><br>for retro game stores</h1>
-  <p class="hero-sub">
-    POS, inventory, trade-ins, market pricing, and more —
-    purpose-built for buy/sell/trade game shops. Not a generic retail tool bolted together.
-  </p>
-  <div class="hero-ctas">
-    <a href="#demo" class="btn-primary">Join the waitlist</a>
-    <a href="#features" class="btn-ghost">See features</a>
+  <div class="hero-badge"><span class="dot"></span> Built for retro game & collectible stores</div>
+  <h1>The POS that actually<br><em>understands your business</em></h1>
+  <p class="hero-sub">Live eBay market pricing, trade-in calculator, consignment tracking, and a full point-of-sale — purpose-built for game, card, and collectible stores.</p>
+  <div class="hero-actions">
+    <a href="signup.html" class="btn-primary">Request a demo</a>
+    <a href="#features" class="btn-ghost">See all features →</a>
   </div>
-  <div class="hero-stats">
-    <div class="stat">
-      <div class="stat-num">$49</div>
-      <div class="stat-label">Starting per month</div>
+
+  <!-- Hero mockup -->
+  <div class="hero-mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <span style="margin-left:12px;font-size:11px;color:#6b6b82;font-family:'DM Mono',monospace">retrovault — Star Gaming · Inventory</span>
     </div>
-    <div class="stat">
-      <div class="stat-num">5 min</div>
-      <div class="stat-label">To process a sale</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">Live</div>
-      <div class="stat-label">eBay market pricing</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">0</div>
-      <div class="stat-label">Hardware required</div>
+    <div class="mockup-inner">
+      <div class="mockup-sidebar">
+        <div style="font-size:9px;color:#6b6b82;text-transform:uppercase;letter-spacing:.5px;padding:4px 10px;margin-bottom:6px">Operations</div>
+        <div class="mockup-nav-item">📊 Dashboard</div>
+        <div class="mockup-nav-item active"> Inventory</div>
+        <div class="mockup-nav-item"> Transactions</div>
+        <div class="mockup-nav-item">↔ Trade-In</div>
+        <div style="font-size:9px;color:#6b6b82;text-transform:uppercase;letter-spacing:.5px;padding:4px 10px;margin:10px 0 6px">Finance</div>
+        <div class="mockup-nav-item">📈 Reports</div>
+        <div class="mockup-nav-item"> Consignment</div>
+        <div class="mockup-nav-item">💸 Expenses</div>
+        <div style="font-size:9px;color:#6b6b82;text-transform:uppercase;letter-spacing:.5px;padding:4px 10px;margin:10px 0 6px">Management</div>
+        <div class="mockup-nav-item">📡 Market Pricing</div>
+        <div class="mockup-nav-item">⚙ Settings</div>
+      </div>
+      <div class="mockup-content">
+        <div class="mockup-metrics">
+          <div class="mockup-metric"><div class="m-lbl">In stock</div><div class="m-val" style="color:#60a5fa">247</div></div>
+          <div class="mockup-metric"><div class="m-lbl">Retail value</div><div class="m-val" style="color:#c8f135">$8,941</div></div>
+          <div class="mockup-metric"><div class="m-lbl">Cost basis</div><div class="m-val">$3,820</div></div>
+          <div class="mockup-metric"><div class="m-lbl">Margin</div><div class="m-val" style="color:#14b8a6">57%</div></div>
+        </div>
+        <div class="mockup-table">
+          <div class="mockup-th"><span>Title / Platform</span><span>Condition</span><span>SKU</span><span>Price</span><span>Status</span></div>
+          <div class="mockup-tr">
+            <span style="font-weight:700;font-size:12px">Super Mario Bros. 3<br><span style="font-weight:400;color:#6b6b82;font-size:10px">NES · 2 copies</span></span>
+            <span><span class="cond-badge" style="background:rgba(29,78,216,.15);color:#60a5fa">CIB</span></span>
+            <span style="font-family:'DM Mono',monospace;font-size:10px;color:#c8f135">NES-00001-CIB</span>
+            <span style="font-family:'DM Mono',monospace;font-weight:700">$54.99</span>
+            <span style="font-size:10px;font-weight:700;color:#14b8a6">IN STOCK</span>
+          </div>
+          <div class="mockup-tr">
+            <span style="font-weight:700;font-size:12px">Mega Man 2<br><span style="font-weight:400;color:#6b6b82;font-size:10px">NES</span></span>
+            <span><span class="cond-badge" style="background:rgba(180,83,9,.15);color:#fbbf24">LW/M</span></span>
+            <span style="font-family:'DM Mono',monospace;font-size:10px;color:#c8f135">NES-00004-LM</span>
+            <span style="font-family:'DM Mono',monospace;font-weight:700">$29.99</span>
+            <span style="font-size:10px;font-weight:700;color:#14b8a6">IN STOCK</span>
+          </div>
+          <div class="mockup-tr">
+            <span style="font-weight:700;font-size:12px">Zelda: OoT<br><span style="font-weight:400;color:#6b6b82;font-size:10px">Nintendo 64</span></span>
+            <span><span class="cond-badge" style="background:rgba(156,163,175,.12);color:#9ca3af">Loose</span></span>
+            <span style="font-family:'DM Mono',monospace;font-size:10px;color:#c8f135">N64-00002-DO</span>
+            <span style="font-family:'DM Mono',monospace;font-weight:700">$34.99</span>
+            <span style="font-size:10px;font-weight:700;color:#14b8a6">IN STOCK</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ── Problem ────────────────────────────────────────────── -->
-<section class="problem" id="problem">
-  <div class="problem-inner">
-    <div class="reveal">
-      <div class="section-label">The problem</div>
-      <h2 class="section-title">Running a game store<br>shouldn't feel like this</h2>
-      <p class="section-sub">Generic POS systems weren't built for retro games. You end up piecing together spreadsheets, sticky notes, and gut instinct.</p>
-      <ul class="pain-list">
-        <li class="pain-item">
-          <span class="pain-icon">01</span>
-          <div class="pain-text">
-            <strong>No trade-in system</strong>
-            <span>Calculating offers by hand, guessing on prices, losing money on bad trades</span>
+<!-- Pain points -->
+<section class="pain reveal">
+  <div class="section-label">Sound familiar?</div>
+  <h2>Generic POS software wasn't built for your store</h2>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-icon">❓</div>
+      <h3>No idea what to offer for a trade-in</h3>
+      <p>You're guessing, checking PriceCharting on your phone, and hoping you don't overpay. Every trade-in is a gamble.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">📋</div>
+      <h3>Consignors calling constantly</h3>
+      <p>"Did my stuff sell?" You're manually tracking who brought in what, in a notebook or a spreadsheet you hate.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">📉</div>
+      <h3>Stale prices killing your margins</h3>
+      <p>You priced that game six months ago. The market moved. You don't know until it walks out the door for too little.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🔧</div>
+      <h3>Square doesn't understand grading</h3>
+      <p>Loose, CIB, sealed — to Square it's all just "item." You've hacked around it with weird SKUs and notes.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">💸</div>
+      <h3>SimpleConsign is expensive and clunky</h3>
+      <p>$200/month for software that looks like it was built in 2012. And it still doesn't have live market pricing.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">📦</div>
+      <h3>No visibility into what's actually moving</h3>
+      <p>What's your best margin category? What's been sitting for 90 days? You're running on gut feel, not data.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features reveal" id="features">
+  <h2>Everything your store actually needs</h2>
+  <div class="feature-grid">
+
+    <!-- Feature 1: Market pricing -->
+    <div class="feature-card">
+      <div class="feature-num">01</div>
+      <h3>Live eBay market pricing</h3>
+      <p>Real sold listing data from eBay — updated nightly. Search any game, card, Funko, or LEGO set and get cash offer and store credit prices calculated automatically.</p>
+      <div class="feature-ui">
+        <div style="font-size:10px;font-weight:700;margin-bottom:8px">Perfect Dark · Nintendo 64</div>
+        <div class="price-card-mini">
+          <div class="pcm" style="opacity:.4"><div class="pcm-label">Loose</div><div class="pcm-price" style="color:#6b6b82">No data</div></div>
+          <div class="pcm">
+            <div class="pcm-label">CIB</div>
+            <div class="pcm-price" style="font-size:20px;font-weight:800">$42.50</div>
+            <div style="font-size:9px;color:#6b6b82;margin-top:2px">Cash offer</div>
+            <div class="pcm-offer">$17.00</div>
           </div>
-        </li>
-        <li class="pain-item">
-          <span class="pain-icon">02</span>
-          <div class="pain-text">
-            <strong>Paying too much for POS</strong>
-            <span>Generic systems charge $150–300/mo and still don't understand game condition grades</span>
+          <div class="pcm" style="background:rgba(20,184,166,.08);border:1px solid rgba(20,184,166,.2)">
+            <div class="pcm-label" style="color:#14b8a6">Sealed</div>
+            <div class="pcm-price" style="font-size:20px;font-weight:800;color:#c8f135">$187.50</div>
+            <div style="font-size:9px;color:#6b6b82;margin-top:2px">Cash offer</div>
+            <div class="pcm-offer">$75.00</div>
           </div>
-        </li>
-        <li class="pain-item">
-          <span class="pain-icon">03</span>
-          <div class="pain-text">
-            <strong>No market pricing</strong>
-            <span>Manually checking PriceCharting for every item while a customer waits at the counter</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 2: Trade-in -->
+    <div class="feature-card">
+      <div class="feature-num">02</div>
+      <h3>Trade-in calculator</h3>
+      <p>Built-in trade-in workflow with cash and store credit offers calculated from market data. Print invoices, add directly to inventory, and keep a full history of every session.</p>
+      <div class="feature-ui">
+        <div style="font-size:10px;font-weight:700;margin-bottom:8px;color:#6b6b82">Trade-in session · 3 items</div>
+        <div class="ti-row"><span>Super Mario World (SNES)</span><span style="font-family:'DM Mono',monospace;color:#c8f135">$8.40</span></div>
+        <div class="ti-row"><span>GoldenEye 007 (N64)</span><span style="font-family:'DM Mono',monospace;color:#c8f135">$12.00</span></div>
+        <div class="ti-row"><span>Donkey Kong Country (SNES)</span><span style="font-family:'DM Mono',monospace;color:#c8f135">$6.00</span></div>
+        <div style="display:flex;justify-content:space-between;padding-top:8px;font-weight:700">
+          <span>Total cash offer</span>
+          <span style="font-family:'DM Mono',monospace;color:#c8f135;font-size:16px">$26.40</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 3: Consignment -->
+    <div class="feature-card">
+      <div class="feature-num">03</div>
+      <h3>Consignment tracking</h3>
+      <p>Track items sold on behalf of customers with automatic split calculations, payout history, and a self-service portal consignors can check anytime without calling you.</p>
+      <div class="feature-ui">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-size:11px;font-weight:700">Sarah M. · 60% split</div>
+          <span class="tag tag-green">Portal active</span>
+        </div>
+        <div class="inv-row"><span style="color:#6b6b82;font-size:11px">Items in stock</span><span style="font-family:'DM Mono',monospace">12</span></div>
+        <div class="inv-row"><span style="color:#6b6b82;font-size:11px">Items sold</span><span style="font-family:'DM Mono',monospace">8</span></div>
+        <div class="inv-row"><span style="color:#6b6b82;font-size:11px">Total earned</span><span style="font-family:'DM Mono',monospace;color:#14b8a6">$284.40</span></div>
+        <div class="inv-row"><span style="font-weight:700">Balance owed</span><span style="font-family:'DM Mono',monospace;font-weight:700;color:#c8f135;font-size:15px">$164.40</span></div>
+      </div>
+    </div>
+
+    <!-- Feature 4: Inventory -->
+    <div class="feature-card">
+      <div class="feature-num">04</div>
+      <h3>Condition-aware inventory</h3>
+      <p>Loose, CIB, sealed, graded — every condition tracked properly with its own SKU, price, and margin. Bulk actions, low stock alerts, and CSV export included.</p>
+      <div class="feature-ui">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:#6b6b82;margin-bottom:8px">3 items selected</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="font-size:10px;padding:4px 8px;background:rgba(200,241,53,.1);color:#c8f135;border-radius:4px;font-weight:600">Mark sold</span>
+          <span style="font-size:10px;padding:4px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:#6b6b82">Print labels</span>
+          <span style="font-size:10px;padding:4px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:#6b6b82">Update price</span>
+          <span style="font-size:10px;padding:4px 8px;background:rgba(248,113,113,.1);color:#f87171;border-radius:4px">Delete</span>
+        </div>
+        <div style="margin-top:10px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);border-radius:6px;padding:8px;font-size:10px;color:#f87171">
+          ⚠ 3 low stock alerts — Earthbound, Chrono Trigger, Final Fantasy VI
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 5: Reports -->
+    <div class="feature-card">
+      <div class="feature-num">05</div>
+      <h3>Reports that actually help</h3>
+      <p>Revenue by category, top selling items, velocity analysis, end-of-day till reconciliation, and multi-store HQ reporting. Export any report to CSV.</p>
+      <div class="feature-ui">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="background:var(--bg);border-radius:6px;padding:8px">
+            <div style="font-size:9px;color:#6b6b82;margin-bottom:3px">Net revenue (30d)</div>
+            <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:#c8f135">$4,820</div>
           </div>
-        </li>
-        <li class="pain-item">
-          <span class="pain-icon">04</span>
-          <div class="pain-text">
-            <strong>Label chaos</strong>
-            <span>No SKU system, inconsistent pricing, can't track what you paid vs what you're selling for</span>
+          <div style="background:var(--bg);border-radius:6px;padding:8px">
+            <div style="font-size:9px;color:#6b6b82;margin-bottom:3px">Gross margin</div>
+            <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:#14b8a6">58%</div>
           </div>
-        </li>
+          <div style="background:var(--bg);border-radius:6px;padding:8px">
+            <div style="font-size:9px;color:#6b6b82;margin-bottom:3px">Top category</div>
+            <div style="font-size:12px;font-weight:700">Video Games</div>
+          </div>
+          <div style="background:var(--bg);border-radius:6px;padding:8px">
+            <div style="font-size:9px;color:#6b6b82;margin-bottom:3px">Avg days to sell</div>
+            <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700">18d</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 6: Multi-store -->
+    <div class="feature-card">
+      <div class="feature-num">06</div>
+      <h3>Multi-store HQ</h3>
+      <p>Running more than one location? See all stores in one dashboard — revenue, inventory value, and trade-in volume across every location with a single login.</p>
+      <div class="feature-ui">
+        <div style="font-size:10px;font-weight:700;color:#6b6b82;margin-bottom:8px">Last 30 days · All locations</div>
+        <div class="inv-row">
+          <div>
+            <div style="font-weight:700;font-size:12px">Star Gaming — Main St</div>
+            <div style="height:4px;background:var(--bg);border-radius:2px;margin-top:4px;width:180px"><div style="height:4px;width:70%;background:#c8f135;border-radius:2px"></div></div>
+          </div>
+          <span style="font-family:'DM Mono',monospace;color:#c8f135;font-weight:700">$3,241</span>
+        </div>
+        <div class="inv-row">
+          <div>
+            <div style="font-weight:700;font-size:12px">Star Gaming — Eastside</div>
+            <div style="height:4px;background:var(--bg);border-radius:2px;margin-top:4px;width:180px"><div style="height:4px;width:42%;background:#60a5fa;border-radius:2px"></div></div>
+          </div>
+          <span style="font-family:'DM Mono',monospace;color:#60a5fa;font-weight:700">$1,940</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding-top:8px;font-weight:700;font-size:13px">
+          <span>Combined</span>
+          <span style="font-family:'DM Mono',monospace;color:#c8f135">$5,181</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Comparison -->
+<section class="comparison reveal" id="comparison">
+  <h2>How we stack up</h2>
+  <p class="comparison-sub">RetroVault vs the alternatives game stores actually use</p>
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th class="rv">RetroVault</th>
+        <th>SimpleConsign</th>
+        <th>Square</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Live eBay market pricing</td><td class="rv"><span class="comp-check">✓</span></td><td><span class="comp-x">✕</span></td><td><span class="comp-x">✕</span></td></tr>
+      <tr><td>Trade-in calculator</td><td class="rv"><span class="comp-check">✓</span></td><td><span class="comp-x">✕</span></td><td><span class="comp-x">✕</span></td></tr>
+      <tr><td>Consignment tracking</td><td class="rv"><span class="comp-check">✓</span></td><td><span class="comp-check">✓</span></td><td><span class="comp-x">✕</span></td></tr>
+      <tr><td>Condition grading (CIB, Loose, Sealed)</td><td class="rv"><span class="comp-check">✓</span></td><td><span class="comp-partial">Partial</span></td><td><span class="comp-x">✕</span></td></tr>
+      <tr><td>Consignor self-service portal</td><td class="rv"><span class="comp-check">✓</span></td><td><span class="comp-x">✕</span></td><td><span class="comp-x">✕</span></td></tr>
+      <tr><td>Nightly price auto-refresh</td><td class="rv"><span class="comp-check">✓</span></td><td><span class="comp-x">✕</span></td><td><span class="comp-x">✕</span></td></tr>
+      <tr><td>Multi-store HQ reporting</td><td class="rv"><span class="comp-check">✓</span></td><td><span class="comp-check">✓</span></td><td><span class="comp-partial">Paid add-on</span></td></tr>
+      <tr><td>Loyalty program</td><td class="rv"><span class="comp-check">✓</span></td><td><span class="comp-partial">Basic</span></td><td><span class="comp-check">✓</span></td></tr>
+      <tr><td>Modern web interface</td><td class="rv"><span class="comp-check">✓</span></td><td><span class="comp-x">✕</span></td><td><span class="comp-check">✓</span></td></tr>
+      <tr><td>Starting price</td><td class="rv" style="color:#c8f135;font-weight:700;font-family:'DM Mono',monospace">$49/mo</td><td style="font-family:'DM Mono',monospace;color:#6b6b82">$99/mo</td><td style="font-family:'DM Mono',monospace;color:#6b6b82">$60/mo+</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Pricing -->
+<section class="pricing reveal" id="pricing">
+  <h2>Simple, transparent pricing</h2>
+  <p class="pricing-sub">No setup fees. No per-transaction cuts. Cancel anytime.</p>
+  <div class="pricing-grid">
+
+    <div class="pricing-card">
+      <div class="pricing-plan">Starter</div>
+      <div class="pricing-price"><sup>$</sup>49</div>
+      <div class="pricing-period">per month · 1 location</div>
+      <ul class="pricing-features">
+        <li>Full POS with inventory</li>
+        <li>Market pricing (eBay data)</li>
+        <li>Trade-in calculator</li>
+        <li>Consignment tracking</li>
+        <li>Loyalty program</li>
+        <li>Reports & exports</li>
+        <li>Up to 2 staff accounts</li>
       </ul>
+      <a href="signup.html" class="pricing-cta ghost">Get started</a>
     </div>
-    <div class="reveal">
-      <div class="solution-card">
-        <h3>RetroVault solves all of it</h3>
-        <p>One purpose-built platform that handles everything from the moment a customer walks in to the moment money hits your account.</p>
-        <div class="solution-features">
-          <div class="sol-feat"><span class="sol-feat-icon">✓</span><span class="sol-feat-text">Trade-in calculator with live eBay market data</span></div>
-          <div class="sol-feat"><span class="sol-feat-icon">✓</span><span class="sol-feat-text">Full POS with cash, card, and store credit</span></div>
-          <div class="sol-feat"><span class="sol-feat-icon">✓</span><span class="sol-feat-text">QR code labels — scan to sell in seconds</span></div>
-          <div class="sol-feat"><span class="sol-feat-icon">✓</span><span class="sol-feat-text">Return & exchange system with fraud protection</span></div>
-          <div class="sol-feat"><span class="sol-feat-icon">✓</span><span class="sol-feat-text">Inventory, P&L, and shift reporting</span></div>
-          <div class="sol-feat"><span class="sol-feat-icon">✓</span><span class="sol-feat-text">Works on any device — no hardware needed</span></div>
-        </div>
-      </div>
+
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Most popular</div>
+      <div class="pricing-plan">Pro</div>
+      <div class="pricing-price"><sup>$</sup>89</div>
+      <div class="pricing-period">per month · 1 location</div>
+      <ul class="pricing-features">
+        <li>Everything in Starter</li>
+        <li>Nightly price auto-refresh</li>
+        <li>Consignor portal</li>
+        <li>End of day reports</li>
+        <li>Customer purchase history</li>
+        <li>Unlimited staff accounts</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="signup.html" class="pricing-cta primary">Request demo</a>
     </div>
+
+    <div class="pricing-card">
+      <div class="pricing-plan">Multi-store</div>
+      <div class="pricing-price"><sup>$</sup>149</div>
+      <div class="pricing-period">per month · up to 3 locations</div>
+      <ul class="pricing-features">
+        <li>Everything in Pro</li>
+        <li>Multi-store HQ dashboard</li>
+        <li>Cross-location reporting</li>
+        <li>Centralized team management</li>
+        <li>Aggregate inventory view</li>
+        <li>Dedicated onboarding</li>
+      </ul>
+      <a href="signup.html" class="pricing-cta ghost">Contact us</a>
+    </div>
+
   </div>
+  <p style="margin-top:32px;font-size:13px;color:var(--muted)">All plans include a 14-day free trial. No credit card required to start.</p>
 </section>
 
-<!-- ── Features ───────────────────────────────────────────── -->
-<section class="features" id="features">
-  <div class="features-inner">
-    <div class="features-header reveal">
-      <div class="section-label">Features</div>
-      <h2 class="section-title">Everything your store needs</h2>
-      <p class="section-sub">Built specifically for video game, comic, and collectible stores. Every feature designed around how you actually work.</p>
-    </div>
-    <div class="features-grid">
-
-      <div class="feat-card featured reveal">
-        <div class="feat-icon">$</div>
-        <div class="feat-title" style="color:#fff">Point of Sale</div>
-        <div class="feat-desc">Scan QR codes to instantly add items to cart. Accept cash, card, store credit, or split payments. Print thermal receipts with a scannable QR code for easy returns. Training mode for new staff.</div>
-
-      </div>
-
-      <div class="feat-card reveal">
-        <div class="feat-icon">≡</div>
-        <div class="feat-title">Live Market Pricing</div>
-        <div class="feat-desc">Pull real eBay completed sale prices for any game — loose, CIB, or sealed. Automatically calculates your cash and store credit trade-in offers.</div>
-
-      </div>
-
-      <div class="feat-card reveal">
-        <div class="feat-icon">⇄</div>
-        <div class="feat-title">Trade-In System</div>
-        <div class="feat-desc">Look up market prices, build a trade-in quote, print an invoice, and add everything to inventory in one flow. Cash or store credit payout options.</div>
-      </div>
-
-      <div class="feat-card reveal">
-        <div class="feat-icon">#</div>
-        <div class="feat-title">SKU & Label Printing</div>
-        <div class="feat-desc">Scan a UPC to auto-fill game details from IGDB. Generate SKU codes and print QR labels. Scan the label at the register to sell instantly.</div>
-      </div>
-
-      <div class="feat-card reveal">
-        <div class="feat-icon">↩</div>
-        <div class="feat-title">Returns & Exchanges</div>
-        <div class="feat-desc">Scan the receipt QR to pull up original line items. Select items to return or exchange. Fraud protection prevents double-returns on the same receipt.</div>
-      </div>
-
-      <div class="feat-card reveal">
-        <div class="feat-icon">◻</div>
-        <div class="feat-title">Inventory Management</div>
-        <div class="feat-desc">Full inventory with SKU tracking, cost vs. price, margin %, condition, channel, and notes. Sort, filter, search, and export to CSV.</div>
-      </div>
-
-      <div class="feat-card reveal">
-        <div class="feat-icon">▣</div>
-        <div class="feat-title">Loyalty & Store Credit</div>
-        <div class="feat-desc">Customer profiles with points, store credit, visit history, and birthday tracking. Apply coupons and discounts at checkout.</div>
-      </div>
-
-      <div class="feat-card reveal">
-        <div class="feat-icon">↗</div>
-        <div class="feat-title">P&L & Reporting</div>
-        <div class="feat-desc">Real-time profit & loss, expense tracking, shift reports, and transaction history. Know your numbers without a spreadsheet.</div>
-      </div>
-
-    </div>
-  </div>
+<!-- CTA -->
+<section class="cta-section reveal" id="contact">
+  <h2>Ready to stop guessing and start knowing?</h2>
+  <p>Book a 20-minute demo. We'll show you the whole system with your categories, your pricing, your store.</p>
+  <a href="mailto:hello@retrovaultpos.com?subject=Demo request" class="btn-primary" style="font-size:16px;padding:16px 40px">
+    Book a demo — hello@retrovaultpos.com
+  </a>
+  <p class="cta-note">Or text us at (555) 000-0000 · Usually respond within a few hours</p>
 </section>
 
-<!-- ── How it works ───────────────────────────────────────── -->
-<section class="how" id="how">
-  <div class="how-inner">
-    <div class="how-header reveal">
-      <div class="section-label">How it works</div>
-      <h2 class="section-title">Up and running in a day</h2>
-      <p class="section-sub" style="margin:0 auto">No hardware to buy, no IT department needed. If you can use a browser, you can run RetroVault.</p>
-    </div>
-    <div class="steps">
-      <div class="step reveal">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Join the waitlist</h3>
-          <p>Drop your info below and we'll reach out personally as we get closer to launch. Be among the first stores to get access.</p>
-        </div>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Get your store set up</h3>
-          <p>We create your account, configure your product types, tax rates, and printer settings. You get a welcome package with everything you need to get started.</p>
-        </div>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>Add your inventory</h3>
-          <p>Scan UPC barcodes to auto-fill game details and generate SKU labels. Or import from a spreadsheet. Most stores are fully loaded within a day.</p>
-        </div>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h3>Open for business</h3>
-          <p>Pull up the POS on any device — tablet, laptop, or desktop. Scan, sell, trade. Your data is in the cloud and always backed up.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ── Comparison ─────────────────────────────────────────── -->
-<section id="comparison" style="background:#f8fafc;padding:100px 5%">
-  <div style="max-width:900px;margin:0 auto">
-    <div style="text-align:center;margin-bottom:48px">
-      <div class="section-label">How we compare</div>
-      <h2 class="section-title">Built for game stores.<br>Not adapted for them.</h2>
-      <p class="section-sub" style="margin:0 auto">RetroVault vs the tools most stores are currently working around</p>
-    </div>
-    <div style="overflow-x:auto;border-radius:16px;overflow:hidden;border:1px solid #e2e8f0;box-shadow:0 4px 24px rgba(0,0,0,.06)">
-      <table style="width:100%;border-collapse:collapse">
-        <thead>
-          <tr>
-            <th style="text-align:left;padding:16px 24px;font-size:11px;font-weight:700;background:#f1f5f9;border-bottom:2px solid #e2e8f0;color:#6b7280;text-transform:uppercase;letter-spacing:.5px">Feature</th>
-            <th style="padding:16px 24px;font-size:13px;font-weight:800;background:#0a0a0f;color:#c8f135;border-bottom:2px solid #1e1e2a;text-align:center;letter-spacing:-.2px">RetroVault</th>
-            <th style="padding:16px 24px;font-size:11px;font-weight:700;background:#f1f5f9;border-bottom:2px solid #e2e8f0;color:#6b7280;text-align:center;text-transform:uppercase;letter-spacing:.5px">SimpleConsign</th>
-            <th style="padding:16px 24px;font-size:11px;font-weight:700;background:#f1f5f9;border-bottom:2px solid #e2e8f0;color:#6b7280;text-align:center;text-transform:uppercase;letter-spacing:.5px">Square</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="background:#fff">
-            <td style="padding:13px 24px;font-size:13px;font-weight:500;border-bottom:1px solid #e2e8f0;color:#1a1a2e">Live eBay market pricing</td>
-            <td style="text-align:center;border-bottom:1px solid #1e1e2a;background:#0f0f15"><span style="color:#c8f135;font-size:18px;font-weight:700">✓</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#dc2626;font-size:18px">✕</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#dc2626;font-size:18px">✕</span></td>
-          </tr>
-          <tr style="background:#fafafa">
-            <td style="padding:13px 24px;font-size:13px;font-weight:500;border-bottom:1px solid #e2e8f0;color:#1a1a2e">Trade-in calculator with market offers</td>
-            <td style="text-align:center;border-bottom:1px solid #1e1e2a;background:#0f0f15"><span style="color:#c8f135;font-size:18px;font-weight:700">✓</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#dc2626;font-size:18px">✕</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#dc2626;font-size:18px">✕</span></td>
-          </tr>
-          <tr style="background:#fff">
-            <td style="padding:13px 24px;font-size:13px;font-weight:500;border-bottom:1px solid #e2e8f0;color:#1a1a2e">Consignment tracking</td>
-            <td style="text-align:center;border-bottom:1px solid #1e1e2a;background:#0f0f15"><span style="color:#c8f135;font-size:18px;font-weight:700">✓</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#059669;font-size:18px">✓</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#dc2626;font-size:18px">✕</span></td>
-          </tr>
-          <tr style="background:#fafafa">
-            <td style="padding:13px 24px;font-size:13px;font-weight:500;border-bottom:1px solid #e2e8f0;color:#1a1a2e">Consignor self-service portal</td>
-            <td style="text-align:center;border-bottom:1px solid #1e1e2a;background:#0f0f15"><span style="color:#c8f135;font-size:18px;font-weight:700">✓</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#dc2626;font-size:18px">✕</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#dc2626;font-size:18px">✕</span></td>
-          </tr>
-          <tr style="background:#fff">
-            <td style="padding:13px 24px;font-size:13px;font-weight:500;border-bottom:1px solid #e2e8f0;color:#1a1a2e">Condition grading (CIB / Loose / Sealed)</td>
-            <td style="text-align:center;border-bottom:1px solid #1e1e2a;background:#0f0f15"><span style="color:#c8f135;font-size:18px;font-weight:700">✓</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#d97706;font-size:12px;font-weight:600">Partial</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#dc2626;font-size:18px">✕</span></td>
-          </tr>
-          <tr style="background:#fafafa">
-            <td style="padding:13px 24px;font-size:13px;font-weight:500;border-bottom:1px solid #e2e8f0;color:#1a1a2e">Nightly price auto-refresh</td>
-            <td style="text-align:center;border-bottom:1px solid #1e1e2a;background:#0f0f15"><span style="color:#c8f135;font-size:18px;font-weight:700">✓</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#dc2626;font-size:18px">✕</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#dc2626;font-size:18px">✕</span></td>
-          </tr>
-          <tr style="background:#fff">
-            <td style="padding:13px 24px;font-size:13px;font-weight:500;border-bottom:1px solid #e2e8f0;color:#1a1a2e">End of day till reconciliation</td>
-            <td style="text-align:center;border-bottom:1px solid #1e1e2a;background:#0f0f15"><span style="color:#c8f135;font-size:18px;font-weight:700">✓</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#d97706;font-size:12px;font-weight:600">Basic</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#059669;font-size:18px">✓</span></td>
-          </tr>
-          <tr style="background:#fafafa">
-            <td style="padding:13px 24px;font-size:13px;font-weight:500;border-bottom:1px solid #e2e8f0;color:#1a1a2e">Multi-store HQ reporting</td>
-            <td style="text-align:center;border-bottom:1px solid #1e1e2a;background:#0f0f15"><span style="color:#c8f135;font-size:18px;font-weight:700">✓</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#059669;font-size:18px">✓</span></td>
-            <td style="text-align:center;border-bottom:1px solid #e2e8f0"><span style="color:#d97706;font-size:12px;font-weight:600">Paid add-on</span></td>
-          </tr>
-          <tr style="background:#fff">
-            <td style="padding:14px 24px;font-size:14px;font-weight:700;color:#1a1a2e">Starting price</td>
-            <td style="text-align:center;background:#0a0a0f;padding:14px 24px"><span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:800;color:#c8f135">$49<span style="font-size:12px;font-weight:400">/mo</span></span></td>
-            <td style="text-align:center;padding:14px 24px"><span style="font-family:'DM Mono',monospace;font-size:15px;color:#6b7280">$99/mo</span></td>
-            <td style="text-align:center;padding:14px 24px"><span style="font-family:'DM Mono',monospace;font-size:15px;color:#6b7280">$60/mo+</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- ── Pricing ────────────────────────────────────────────── -->
-<section class="pricing" id="pricing">
-  <div class="pricing-inner">
-    <div class="pricing-header reveal">
-      <div class="section-label">Pricing</div>
-      <h2 class="section-title">Simple, transparent pricing</h2>
-      <p class="section-sub" style="margin:0 auto">No setup fees. No contracts. Cancel anytime. A fraction of what generic POS systems charge.</p>
-    </div>
-    <div class="pricing-grid">
-
-      <div class="plan reveal">
-        <div class="plan-name">Starter</div>
-        <div class="plan-price"><span>$</span>49</div>
-        <div class="plan-period">per month</div>
-        <div class="plan-desc">Perfect for a single-location store getting started with a modern POS system.</div>
-        <div class="plan-features">
-          <div class="plan-feature"><span class="check">✓</span> Full POS system</div>
-          <div class="plan-feature"><span class="check">✓</span> Inventory management</div>
-          <div class="plan-feature"><span class="check">✓</span> Trade-in calculator</div>
-          <div class="plan-feature"><span class="check">✓</span> SKU & label printing</div>
-          <div class="plan-feature"><span class="check">✓</span> Up to 2 staff accounts</div>
-          <div class="plan-feature"><span class="check">✓</span> Email support</div>
-        </div>
-        <a href="#demo" class="plan-btn">Join the waitlist</a>
-      </div>
-
-      <div class="plan popular reveal">
-        <div class="popular-badge">Most popular</div>
-        <div class="plan-name">Pro</div>
-        <div class="plan-price"><span>$</span>79</div>
-        <div class="plan-period">per month</div>
-        <div class="plan-desc">Everything in Starter plus live market pricing and unlimited staff — for serious stores.</div>
-        <div class="plan-features">
-          <div class="plan-feature"><span class="check">✓</span> Everything in Starter</div>
-          <div class="plan-feature"><span class="check">✓</span> Live eBay market pricing</div>
-          <div class="plan-feature"><span class="check">✓</span> Unlimited staff accounts</div>
-          <div class="plan-feature"><span class="check">✓</span> Loyalty & store credit</div>
-          <div class="plan-feature"><span class="check">✓</span> P&L reporting</div>
-          <div class="plan-feature"><span class="check">✓</span> Priority support</div>
-        </div>
-        <a href="#demo" class="plan-btn">Join the waitlist</a>
-      </div>
-
-      <div class="plan reveal">
-        <div class="plan-name">Multi-Store</div>
-        <div class="plan-price"><span>$</span>129</div>
-        <div class="plan-period">per month</div>
-        <div class="plan-desc">Run up to 3 locations from one account with shared inventory visibility.</div>
-        <div class="plan-features">
-          <div class="plan-feature"><span class="check">✓</span> Everything in Pro</div>
-          <div class="plan-feature"><span class="check">✓</span> Up to 3 locations</div>
-          <div class="plan-feature"><span class="check">✓</span> Cross-location inventory</div>
-          <div class="plan-feature"><span class="check">✓</span> Consolidated reporting</div>
-          <div class="plan-feature"><span class="check">✓</span> Dedicated onboarding</div>
-          <div class="plan-feature"><span class="check">✓</span> Phone support</div>
-        </div>
-        <a href="#demo" class="plan-btn">Join the waitlist</a>
-      </div>
-
-    </div>
-    <p style="text-align:center;margin-top:28px;font-size:13px;color:var(--muted)">
-      All plans billed monthly. No contracts. Cancel anytime.
-    </p>
-  </div>
-</section>
-
-<!-- ── Founder ─────────────────────────────────────────────── -->
-<section class="founder">
-  <div class="founder-inner reveal">
-    <div class="founder-avatar">RV</div>
-    <blockquote>
-      "We built RetroVault because no existing POS system understood how a game store actually works — the trade-ins, the condition grading, the market pricing. So we built one from scratch."
-    </blockquote>
-    <cite>RetroVault POS <span>· Built for game stores, by people who get it</span></cite>
-  </div>
-</section>
-
-<!-- ── Waitlist Form ──────────────────────────────────────── -->
-<section class="demo" id="demo">
-  <div class="demo-inner">
-    <div class="reveal">
-      <div class="section-label" style="justify-content:center;display:flex">Early access</div>
-      <h2 class="section-title">Join the waitlist</h2>
-      <p class="section-sub">RetroVault is currently in development. Leave your info and we'll reach out personally when we're ready to bring your store on board.</p>
-    </div>
-    <div class="demo-form reveal">
-      <div id="form-fields">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Your name *</label>
-            <input type="text" id="f-name" placeholder="John Smith" required>
-          </div>
-          <div class="form-group">
-            <label>Store name *</label>
-            <input type="text" id="f-store" placeholder="Game Haven" required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Email address *</label>
-            <input type="email" id="f-email" placeholder="you@yourstore.com" required>
-          </div>
-          <div class="form-group">
-            <label>City / State</label>
-            <input type="text" id="f-city" placeholder="Buffalo, NY">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>What do you sell?</label>
-          <select id="f-plan">
-            <option value="">Select your primary inventory</option>
-            <option value="retro-games">Retro video games</option>
-            <option value="modern-games">Modern video games</option>
-            <option value="games-comics">Games + comics</option>
-            <option value="games-cards">Games + trading cards</option>
-            <option value="mixed">Mixed collectibles</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Anything you want us to know? <span style="opacity:.5;font-weight:400">(optional)</span></label>
-          <textarea id="f-message" placeholder="Your biggest challenge with your current system, how many transactions you do daily, what features matter most to you..."></textarea>
-        </div>
-        <button class="form-submit" onclick="submitDemo()">
-          Join the waitlist
-        </button>
-        <p class="form-note">No spam. No pressure. We'll reach out personally when the time is right.</p>
-      </div>
-      <div id="form-success">
-        <div class="success-icon">✓</div>
-        <h3>You're on the list!</h3>
-        <p>Thanks for your interest in RetroVault. We'll be in touch personally as we get closer to launch.<br><br>
-        Questions in the meantime? Email us at <strong>info@retrovaultpos.com</strong></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── Footer ─────────────────────────────────────────────── -->
+<!-- Footer -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-logo">● RetroVault POS</div>
-    <div class="footer-links">
-      <a href="#features">Features</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#demo">Waitlist</a>
-      <a href="mailto:info@retrovaultpos.com">info@retrovaultpos.com</a>
-    </div>
-    <div class="footer-copy">© 2026 RetroVault POS. All rights reserved.</div>
+  <div class="footer-brand">
+    <div class="nav-dot"></div>
+    RetroVault POS
   </div>
+  <div class="footer-links">
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="mailto:hello@retrovaultpos.com">Contact</a>
+    <a href="#">Privacy</a>
+  </div>
+  <div style="font-size:12px;color:var(--muted)">© 2026 RetroVault. Built for game stores.</div>
 </footer>
 
 <script>
-// ── Scroll reveal ─────────────────────────────────────────
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      // Stagger children
-      const children = e.target.querySelectorAll('.reveal');
-      children.forEach((child, i) => {
-        setTimeout(() => child.classList.add('visible'), i * 80);
-      });
+// Scroll reveal
+const observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
     }
   });
-}, { threshold: 0.1 });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+document.querySelectorAll('.reveal').forEach(function(el) {
+  observer.observe(el);
+});
 
-// ── Demo form submission via Formspree ───────────────────
-async function submitDemo() {
-  const name  = document.getElementById('f-name').value.trim();
-  const store = document.getElementById('f-store').value.trim();
-  const email = document.getElementById('f-email').value.trim();
-
-  if (!name || !store || !email) {
-    alert('Please fill in your name, store name, and email.');
-    return;
-  }
-
-  const city    = (document.getElementById('f-city')?.value || '').trim();
-  const plan    = (document.getElementById('f-plan')?.value || '');
-  const message = document.getElementById('f-message').value.trim();
-  const planLabels = { 'retro-games':'Retro video games', 'modern-games':'Modern video games', 'games-comics':'Games + comics', 'games-cards':'Games + trading cards', 'mixed':'Mixed collectibles' };
-
-  // Disable button while submitting
-  const btn = document.querySelector('.form-submit');
-  btn.disabled = true;
-  btn.innerHTML = 'Sending…';
-
-  try {
-    const sb = supabase.createClient(
-      'https://obfztbtktpiqiieziheq.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iZnp0YnRrdHBpcWlpZXppaGVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MDYyMzksImV4cCI6MjA5MTA4MjIzOX0.ppGseoUMYk-bpoZX-9yVJX-umeFEvRwYUdh3dKkXCpo'
-    );
-    const { error } = await sb.from('waitlist').insert({
-      name,
-      store_name: store,
-      email,
-      city:    city    || null,
-      sells:   planLabels[plan] || null,
-      message: message || null,
-    });
-    if (error) throw error;
-    document.getElementById('form-fields').style.display = 'none';
-    document.getElementById('form-success').style.display = 'block';
-  } catch(e) {
-    console.error('Waitlist error:', e);
-    btn.disabled = false;
-    btn.textContent = 'Join the waitlist';
-    alert('Something went wrong — please email us at info@retrovaultpos.com');
-  }
-}
-
-// ── Smooth nav ────────────────────────────────────────────
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const target = document.querySelector(a.getAttribute('href'));
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
+// Smooth nav highlighting
+window.addEventListener('scroll', function() {
+  var nav = document.querySelector('nav');
+  nav.style.borderBottomColor = window.scrollY > 20 ? 'var(--border2)' : 'var(--border)';
 });
 </script>
-
 </body>
 </html>
